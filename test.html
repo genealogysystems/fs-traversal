@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Testing</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/familysearch-javascript-sdk.js"></script>
+    <script type="text/javascript" src="/async.js"></script>
+    <script src="/fs-traversal.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        FamilySearch.init({
+          app_key: 'bogus!',
+          environment: 'production',
+          http_function: $.ajax,
+          deferred_function: $.Deferred,
+          access_token:'USYS29E25EB0A3DD61C6F729B510FF5BD89C_idses-prod02.a.fsglobal.net'
+        });
+
+        traversal = FSTraversal(FamilySearch)
+              .person(function(person, callback) {
+                console.log('person '+person.id);
+              });
+              //.traverse('LZNY-BRX');
+
+      });
+    </script>
+  </head>
+  <body>
+    Hi!
+  </body>
+</html>
