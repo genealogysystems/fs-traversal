@@ -34,7 +34,6 @@ function FSTraversal(sdk) {
     _options: {
       limit: undefined,
       order: 'wrd',
-      concurrency: 5,
       wrdFactors: {
         gPositive: 1, // We allow different values for g >= 0 vs g < 0
         gNegative: 1.76,
@@ -42,6 +41,12 @@ function FSTraversal(sdk) {
         m: 1.42
       }
     },
+    
+    /**
+     * Use an async priority queue to manage concurrency
+     * of outstanding FS API requests
+     */
+    _queue: null,
 
     /**
      * Expose functions to change options
@@ -56,20 +61,23 @@ function FSTraversal(sdk) {
       }
       this._options.order = type;
     },
+    
     limit: function(num) {
       if(typeof num !== 'number') {
         throw new Error('invalid limit');
       }
       this._options.limit = num;
     },
+    
     concurrency: function(num) {
       if(typeof num !== 'number') {
         throw new Error('invalid concurrency');
       }
-      this._options.concurrency = num;
-
-      // TODO set this.queue.concurrency to set new concurrency on -the-fly
-      // this._queue.concurrency = num;
+      if(this._queue){
+        this._queue.concurrency = num;
+      } else {
+        this._options.concurrency = num;
+      }
     },
 
     /**
@@ -140,9 +148,15 @@ function FSTraversal(sdk) {
         },
         path: []
       }
-      self._sdk.getPersonWithRelationships(start).then(function(response) {
-        self._processPerson(response);
-      });
+      
+      self._queue = async.priorityQueue(function(personId, callback){
+        self._sdk.getPersonWithRelationships(personId).then(function(response) {
+          callback();
+          self._processPerson(response);
+        });
+      }, self._options.concurrency);
+      
+      self._queue.push(start);
     },
 
     _processPerson: function(person) {
@@ -231,20 +245,12 @@ function FSTraversal(sdk) {
       // TODO
 
       // Queue additional person calls
-      for(var x in rels) {
+      for(var personId in rels) {
         // WARNING: Even though we filtered out already fetched people
         // if filter was async we may have processed some in another "thread"
-        if(!self._fetched[x]) {
-          self._fetched[x] = rels[x];
-
-          // TODO Enqueue a new API call in the priority Queue.
-          (function(x) {
-            setTimeout(function() {
-              self._sdk.getPersonWithRelationships(x).then(function(response) {
-                self._processPerson(response);
-              });
-            }, 0);
-          })(x);
+        if(!self._fetched[personId]) {
+          self._fetched[personId] = rels[personId];
+          self._queue.push(personId, self._calcWeight(self._fetched[personId]));
         }
       }
 
@@ -252,15 +258,17 @@ function FSTraversal(sdk) {
       // Visit Person and mark as visited
       self._visited[id] = person.getPrimaryPerson();
       for(var x in self._callbacks.person) {
-        setTimeout(function() {
-          self._callbacks.person[x].call(self, self._visited[id]);
-        }, 0);
+        (function(x, id){
+          setTimeout(function() {
+            self._callbacks.person[x].call(self, self._visited[id]);
+          }, 0);
+        }(x, id))
       }
 
       // Visit Marriages (only when visited all persons)
       var marriages = person.getSpouseRelationships();
       for(var x in marriages) {
-        var marriage = marriage[x];
+        var marriage = marriages[x];
         if(self._visited[marriage.$getHusbandId()] && self._visited[marriage.$getWifeId()]) {
           (function(hid, wid) {
 

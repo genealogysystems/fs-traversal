@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title>Testing</title>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="/familysearch-javascript-sdk.js"></script>
-    <script type="text/javascript" src="/async.js"></script>
-    <script src="/fs-traversal.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="familysearch-javascript-sdk.js"></script>
+    <script type="text/javascript" src="async.js"></script>
+    <script src="fs-traversal.js"></script>
     <script>
       $(document).ready(function() {
 
@@ -15,12 +15,12 @@
           environment: 'production',
           http_function: $.ajax,
           deferred_function: $.Deferred,
-          access_token:'USYS29E25EB0A3DD61C6F729B510FF5BD89C_idses-prod02.a.fsglobal.net'
+          access_token:'USYS18E695421FC79E5BDD8FD5DE4CE25962_idses-prod02.a.fsglobal.net'
         });
 
         traversal = FSTraversal(FamilySearch)
               .person(function(person, callback) {
-                console.log('person '+person.id);
+                console.log('person ' + person.id + ': ' + traversal._calcWeight(traversal._fetched[person.id]));
               });
               //.traverse('LZNY-BRX');
 
