@@ -23,14 +23,20 @@ function FSTraversal(sdk) {
     _options: {
       limit: undefined,
       order: 'wrd',
-      concurrency: 5
+      concurrency: 5,
+      wrdFactors: {
+        gPositive: 1,
+        gNegative: 1.76,
+        c: 1,
+        m: 1.42
+      }
     },
 
     /**
      * Expose functions to change options
      */
     order: function(type) {
-      if(type != 'wrd' || type != 'depth' || type != 'breadth') {
+      if(type != 'wrd' || type != 'depth' || type != 'distance') {
         throw new Error('invalid order');
       }
       this._options.order = type;
@@ -93,6 +99,8 @@ function FSTraversal(sdk) {
     traverse: function(start) {
       var self = this;
       self._fetched[start] = {
+        depth: 0,
+        distance: 0,
         wrd: {
           g: 0,
           c: 0,
@@ -124,6 +132,8 @@ function FSTraversal(sdk) {
       ids = person.getChildIds();
       for(var x in ids) {
         rels[ids[x]] = {
+          depth: fetched.depth - 1,
+          distance: fetched.distance + 1,
           wrd: {
             g: fetched.wrd.g - 1,
             c: (fetched.wrd.up) ? fetched.wrd.c + 1 : fetched.wrd.c,
@@ -136,6 +146,8 @@ function FSTraversal(sdk) {
       ids = person.getFatherIds();
       for(var x in ids) {
         rels[ids[x]] = {
+          depth: fetched.depth + 1,
+          distance: fetched.distance + 1,
           wrd: {
             g: fetched.wrd.g + 1,
             c: (fetched.wrd.c == 0) ? 0 : fetched.wrd.c + 1,
@@ -148,6 +160,8 @@ function FSTraversal(sdk) {
       ids = person.getMotherIds();
       for(var x in ids) {
         rels[ids[x]] = {
+          depth: fetched.depth + 1,
+          distance: fetched.distance + 1,
           wrd: {
             g: fetched.wrd.g + 1,
             c: (fetched.wrd.c == 0) ? 0 : fetched.wrd.c + 1,
@@ -159,6 +173,8 @@ function FSTraversal(sdk) {
       }
       ids = person.getSpouseIds();
       for(var x in ids) {
+        depth: fetched.depth,
+        distance: fetched.distance + 1,
         rels[ids[x]] = {
           wrd: {
             g: fetched.wrd.g,
@@ -198,6 +214,29 @@ function FSTraversal(sdk) {
       // Visit Child (only when visited all persons)
 
       // Visit Parent (only when visited all persons)
+    },
+
+    /**
+     * Calculates the weight for the node.
+     */
+    _calcWeight: function(fetchObj) {
+      switch(this._options.order) {
+        case 'wrd':
+          // Calculates the weighted relationship distance value.
+          // Based on http://fht.byu.edu/prev_workshops/workshop13/papers/baker-beyond-fhtw2013.pdf
+          var wrd = fetchObj.wrd;
+              G = ((wrd.g >= 0)?this._options.wrdFactors.gPositive:this._options.wrdFactors.gNegative)*(Math.abs(wrd.g)+1),
+              C = Math.pow(Math.E, (this._options.wrdFactors.c*wrd.c)),
+              M = Math.pow(Math.E, (this._options.wrdFactors.m*wrd.m));
+
+          return G*C*M;
+        case 'depth':
+          return fetchObj.depth;
+        case 'distance':
+          return fetchObj.distance;
+        default:
+          return 0;
+      }
     }
 
   }
