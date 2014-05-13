@@ -28,11 +28,13 @@ function FSTraversal(sdk) {
      */
     _fetched: {},
 
+    _count: 0,
+
     /**
      * Our traversal options.
      */
     _options: {
-      limit: undefined,
+      limit: Infinity,
       order: 'wrd',
       wrdFactors: {
         gPositive: 1, // We allow different values for g >= 0 vs g < 0
@@ -52,14 +54,16 @@ function FSTraversal(sdk) {
      * Expose functions to change options
      */
     order: function(type) {
-      if(type != 'wrd' || type != 'depth' || type != 'distance') {
+      if(type != 'wrd' && type != 'depth' && type != 'distance') {
         throw new Error('invalid order');
       }
       // Make sure we haven't or are not currently traversing.
-      if(self._status !== 'ready') {
+      if(this._status !== 'ready') {
         throw new Error('You may only set the order before starting a traversal');
       }
       this._options.order = type;
+
+      return this;
     },
     
     limit: function(num) {
@@ -67,6 +71,8 @@ function FSTraversal(sdk) {
         throw new Error('invalid limit');
       }
       this._options.limit = num;
+
+      return this;
     },
     
     concurrency: function(num) {
@@ -75,9 +81,12 @@ function FSTraversal(sdk) {
       }
       if(this._queue){
         this._queue.concurrency = num;
+        this._options.concurrency = num;
       } else {
         this._options.concurrency = num;
       }
+
+      return this;
     },
 
     /**
@@ -166,18 +175,13 @@ function FSTraversal(sdk) {
           rels = {},
           ids;
 
-      if(Object.keys(self._visited).length > 10)  {
-        console.log('done')
-        return;
-      }
-
       // Create fetched objects from the person relationships
       ids = person.getChildIds();
       for(var x in ids) {
         if(!self._fetched[ids[x]]) {
           rels[ids[x]] = {
             type: 'child',
-            depth: fetched.depth + 1,
+            depth: fetched.depth - 1,
             distance: fetched.distance + 1,
             wrd: {
               g: fetched.wrd.g - 1,
@@ -244,13 +248,27 @@ function FSTraversal(sdk) {
       // Filter the objects we are going to fetch by calling the filter functions
       // TODO
 
+      // Sort rels 
+      var sortedKeys = [];
+      for(var x in rels) {
+        sortedKeys.push(x);
+      }
+
+      sortedKeys.sort(function(a,b) {
+        return self._calcWeight(rels[a]) - self._calcWeight(rels[b]);
+      });
+
       // Queue additional person calls
-      for(var personId in rels) {
+      for(var x in sortedKeys) {
+        var personId = sortedKeys[x];
         // WARNING: Even though we filtered out already fetched people
         // if filter was async we may have processed some in another "thread"
         if(!self._fetched[personId]) {
-          self._fetched[personId] = rels[personId];
-          self._queue.push(personId, self._calcWeight(self._fetched[personId]));
+          if(self._count < self._options.limit) {
+            self._count++;
+            self._fetched[personId] = rels[personId];
+            self._queue.push(personId, self._calcWeight(self._fetched[personId]));
+          }
         }
       }
 

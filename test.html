@@ -19,6 +19,8 @@
         });
 
         traversal = FSTraversal(FamilySearch)
+              .order('wrd')
+              .limit(50)
               .person(function(person, callback) {
                 console.log('person ' + person.id + ': ' + traversal._calcWeight(traversal._fetched[person.id]));
               });
