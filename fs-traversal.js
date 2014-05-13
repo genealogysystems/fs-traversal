@@ -132,7 +132,7 @@ function FSTraversal(sdk) {
       ids = person.getChildIds();
       for(var x in ids) {
         rels[ids[x]] = {
-          depth: fetched.depth - 1,
+          depth: fetched.depth + 1,
           distance: fetched.distance + 1,
           wrd: {
             g: fetched.wrd.g - 1,
@@ -231,7 +231,7 @@ function FSTraversal(sdk) {
 
           return G*C*M;
         case 'depth':
-          return fetchObj.depth;
+          return fetchObj.depth * -1;
         case 'distance':
           return fetchObj.distance;
         default:
