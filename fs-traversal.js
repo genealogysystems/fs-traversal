@@ -8,12 +8,22 @@ function FSTraversal(sdk) {
     _sdk: sdk,
 
     /**
+     * The status of the traversal.
+     * Possible values are ready, running, paused, done.
+     */
+    _status: 'ready',
+
+    /**
      * The array of person id's we've visited.
      */
     _visited: [],
 
     /**
-     * The array of person id's we've fetched.
+     * The object of person id's we've fetched so far.
+     * Note that we place these in here before calling the API.
+     * It is possible that the API call failed, in which case we
+     * do NOT clean these out. Use visited to see of a node has
+     * been visited successfully.
      */
     _fetched: {},
 
@@ -39,6 +49,10 @@ function FSTraversal(sdk) {
       if(type != 'wrd' || type != 'depth' || type != 'distance') {
         throw new Error('invalid order');
       }
+      // Make sure we haven't or are not currently traversing.
+      if(self._status !== 'ready') {
+        throw new Error('You may only set the order before starting a traversal');
+      }
       this._options.order = type;
     },
     limit: function(num) {
@@ -52,6 +66,9 @@ function FSTraversal(sdk) {
         throw new Error('invalid concurrency');
       }
       this._options.concurrency = num;
+
+      // TODO set this.queue.concurrency to set new concurrency on -the-fly
+      // this._queue.concurrency = num;
     },
 
     /**
@@ -93,11 +110,23 @@ function FSTraversal(sdk) {
       this._callbacks[type].push(func);
     },
 
+    status: function() {
+      return this._status;
+    },
+
     /**
      * Traversal function returns a new object with new state.
      */
     traverse: function(start) {
       var self = this;
+
+      // Make sure we haven't or are not currently traversing.
+      if(self._status !== 'ready') {
+        throw new Error('You may only start a traversal when status is ready');
+      }
+
+      self._status = 'running';
+
       self._fetched[start] = {
         depth: 0,
         distance: 0,

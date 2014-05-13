@@ -123,6 +123,17 @@ function(marriage, wife, husband, callback) {
 Values passed to the callback function in `person`, `parent`, `child`, and `marriage`.
 
 
+
+### .status()
+Will return the current traversal status. Possible values are:
+
+* `ready` - The traversal is setup and ready to be started.
+* `running` - The traversal is currently running.
+* `paused` - The traversal is currently pasued. Call `resume()` to continue.
+* `done` - The traversal is done. Calling `traverse()` will NOT start a new traversal.
+
+
+
 ### .pause()
 Will immediately pause the traversal. Note that outstanding API requests will be queued for processing.
 
