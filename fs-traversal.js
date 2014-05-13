@@ -14,9 +14,10 @@ function FSTraversal(sdk) {
     _status: 'ready',
 
     /**
-     * The array of person id's we've visited.
+     * The object of persons we've visited, keyed by id.
+     * Note that the value is the person object returned by the sdk.
      */
-    _visited: [],
+    _visited: {},
 
     /**
      * The object of person id's we've fetched so far.
@@ -35,7 +36,7 @@ function FSTraversal(sdk) {
       order: 'wrd',
       concurrency: 5,
       wrdFactors: {
-        gPositive: 1,
+        gPositive: 1, // We allow different values for g >= 0 vs g < 0
         gNegative: 1.76,
         c: 1,
         m: 1.42
@@ -128,6 +129,7 @@ function FSTraversal(sdk) {
       self._status = 'running';
 
       self._fetched[start] = {
+        type: 'root',
         depth: 0,
         distance: 0,
         wrd: {
@@ -146,79 +148,96 @@ function FSTraversal(sdk) {
     _processPerson: function(person) {
       var self = this,
           id = person.getPrimaryId(),
-          fetched = this._fetched[id];
+          fetched = this._fetched[id],
+          rels = {},
+          ids;
 
-      if(self._visited.length > 10)  {
+      if(Object.keys(self._visited).length > 10)  {
         console.log('done')
         return;
       }
 
-      // Call filter
-      // These are what will pe set in this._fetched
-      var rels = {},
-          ids;
-      // TODO
+      // Create fetched objects from the person relationships
       ids = person.getChildIds();
       for(var x in ids) {
-        rels[ids[x]] = {
-          depth: fetched.depth + 1,
-          distance: fetched.distance + 1,
-          wrd: {
-            g: fetched.wrd.g - 1,
-            c: (fetched.wrd.up) ? fetched.wrd.c + 1 : fetched.wrd.c,
-            m: fetched.wrd.m,
-            up: fetched.wrd.up
-          },
-          path: fetched.path.concat(['child'])
-        };
+        if(!self._fetched[ids[x]]) {
+          rels[ids[x]] = {
+            type: 'child',
+            depth: fetched.depth + 1,
+            distance: fetched.distance + 1,
+            wrd: {
+              g: fetched.wrd.g - 1,
+              c: (fetched.wrd.up) ? fetched.wrd.c + 1 : fetched.wrd.c,
+              m: fetched.wrd.m,
+              up: fetched.wrd.up
+            },
+            path: fetched.path.concat(['child'])
+          };
+        }
       }
       ids = person.getFatherIds();
       for(var x in ids) {
-        rels[ids[x]] = {
-          depth: fetched.depth + 1,
-          distance: fetched.distance + 1,
-          wrd: {
-            g: fetched.wrd.g + 1,
-            c: (fetched.wrd.c == 0) ? 0 : fetched.wrd.c + 1,
-            m: fetched.wrd.m,
-            up: true
-          },
-          path: fetched.path.concat(['father'])
-        };
+        if(!self._fetched[ids[x]]) {
+          rels[ids[x]] = {
+            type: 'father',
+            depth: fetched.depth + 1,
+            distance: fetched.distance + 1,
+            wrd: {
+              g: fetched.wrd.g + 1,
+              c: (fetched.wrd.c == 0) ? 0 : fetched.wrd.c + 1,
+              m: fetched.wrd.m,
+              up: true
+            },
+            path: fetched.path.concat(['father'])
+          };
+        }
       }
       ids = person.getMotherIds();
       for(var x in ids) {
-        rels[ids[x]] = {
-          depth: fetched.depth + 1,
-          distance: fetched.distance + 1,
-          wrd: {
-            g: fetched.wrd.g + 1,
-            c: (fetched.wrd.c == 0) ? 0 : fetched.wrd.c + 1,
-            m: fetched.wrd.m,
-            up: true
-          },
-          path: fetched.path.concat(['mother'])
-        };
+        if(!self._fetched[ids[x]]) {
+          rels[ids[x]] = {
+            type: 'mother',
+            depth: fetched.depth + 1,
+            distance: fetched.distance + 1,
+            wrd: {
+              g: fetched.wrd.g + 1,
+              c: (fetched.wrd.c == 0) ? 0 : fetched.wrd.c + 1,
+              m: fetched.wrd.m,
+              up: true
+            },
+            path: fetched.path.concat(['mother'])
+          };
+        }
       }
       ids = person.getSpouseIds();
       for(var x in ids) {
-        depth: fetched.depth,
-        distance: fetched.distance + 1,
-        rels[ids[x]] = {
-          wrd: {
-            g: fetched.wrd.g,
-            c: fetched.wrd.c,
-            m: fetched.wrd.m + 1,
-            up: fetched.wrd.up
-          },
-          path: fetched.path.concat(['spouse'])
-        };
+        if(!self._fetched[ids[x]]) {
+          rels[ids[x]] = {
+            type: 'marriage',
+            depth: fetched.depth,
+            distance: fetched.distance + 1,
+            wrd: {
+              g: fetched.wrd.g,
+              c: fetched.wrd.c,
+              m: fetched.wrd.m + 1,
+              up: fetched.wrd.up
+            },
+            path: fetched.path.concat(['spouse'])
+          };
+        }
       }
 
-      // Queue relationship calls
+      // Filter the objects we are going to fetch by calling the filter functions
+      // TODO
+
+      // Queue additional person calls
       for(var x in rels) {
+        // WARNING: Even though we filtered out already fetched people
+        // if filter was async we may have processed some in another "thread"
         if(!self._fetched[x]) {
           self._fetched[x] = rels[x];
+
+          // TODO Enqueue a new API call in the priority Queue.
           (function(x) {
             setTimeout(function() {
               self._sdk.getPersonWithRelationships(x).then(function(response) {
@@ -231,14 +250,29 @@ function FSTraversal(sdk) {
 
 
       // Visit Person and mark as visited
+      self._visited[id] = person.getPrimaryPerson();
       for(var x in self._callbacks.person) {
         setTimeout(function() {
-          self._callbacks.person[x].call(self, person.getPrimaryPerson());
+          self._callbacks.person[x].call(self, self._visited[id]);
         }, 0);
       }
-      self._visited.push(id);
 
       // Visit Marriages (only when visited all persons)
+      var marriages = person.getSpouseRelationships();
+      for(var x in marriages) {
+        var marriage = marriage[x];
+        if(self._visited[marriage.$getHusbandId()] && self._visited[marriage.$getWifeId()]) {
+          (function(hid, wid) {
+
+            for(var y in self._callbacks.marriage) {
+              setTimeout(function() {
+                self._callbacks.marriage[y].call(self, self._visited[wid], self._visited[hid]);
+              }, 0);
+            }
+
+          })(marriage.$getHusbandId(), marriage.$getWifeId());
+        }
+      }
 
       // Visit Child (only when visited all persons)
 
