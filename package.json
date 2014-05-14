@@ -1,0 +1,28 @@
+{
+  "name": "fs-traversal",
+  "version": "0.0.0",
+  "description": "\"A JavaScript traversal framework for the FamilySearch Family Tree using the visitor pattern\"",
+  "main": "fs-traversal.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/genealogysystems/fs-traversal.git"
+  },
+  "author": "Genealogy Systems",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/genealogysystems/fs-traversal/issues"
+  },
+  "homepage": "https://github.com/genealogysystems/fs-traversal",
+  "scripts": {
+    "test": "mocha",
+    "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js"
+  },
+  "dependencies": {
+    "async": "~0.8.0"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "mocha": "~1.18.2",
+    "browserify": "~4.1.2"
+  }
+}
