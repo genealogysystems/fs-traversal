@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/genealogysystems/fs-traversal",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --reporter spec",
     "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js"
   },
   "dependencies": {
