@@ -76,7 +76,7 @@ Specify a function to be called for each person visited in the traversal. You ma
 
 **function(person, callback)**
 
-* `person` is an instance of a [FamilySearcg SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `person` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * `callback` is a function that accepts an (optional) return parameter that will be emitted by `on`.
 
 **Example**
@@ -94,8 +94,8 @@ Specify a function to be called for each child-parent pair visited in the traver
 
 **function(parent, child, callback)**
 
-* `parent` is an instance of a [FamilySearcg SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
-* `child` is an instance of a [FamilySearcg SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `parent` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `child` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * `callback` is a function that accepts an (optional) return parameter that will be emitted by `on`.
 
 
@@ -105,9 +105,9 @@ Specify a function to be called for each child-parent-parent ternary relationshi
 
 **function(child, mother, father, callback)**
 
-* `child` is an instance of a [FamilySearcg SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
-* `mother` is an instance of a [FamilySearcg SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
-* `father` is an instance of a [FamilySearcg SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `child` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `mother` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `father` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * `callback` is a function that accepts an (optional) return parameter that will be emitted by `on`.
 
 
