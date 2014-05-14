@@ -23,6 +23,8 @@
   "devDependencies": {
     "chai": "~1.9.1",
     "mocha": "~1.18.2",
-    "browserify": "~4.1.2"
+    "browserify": "~4.1.2",
+    "q": "~1.0.1",
+    "lodash": "~2.4.1"
   }
 }
