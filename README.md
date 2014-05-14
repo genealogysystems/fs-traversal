@@ -19,9 +19,9 @@ See genealogysystems.github.io/fs-traversal
 ### FSTraversal(fs-sdk)
 Creates and returns a traversal object. Takes in an initialized FS-SDK object.
 ````javascript
-var sdk = FamilySearch.init({access_token: '12345'});
+FamilySearch.init({access_token: '12345'});
 
-var traversal = FSTraversal(sdk);
+var traversal = FSTraversal(FamilySearch);
 ````
 
 
@@ -29,9 +29,10 @@ var traversal = FSTraversal(sdk);
 ### .order(type)
 Sets the order of the traversal. Order processed is lowest to highest. Possible values are:
 
-* `distance` - Every relationship followed increases the depth by one, regardless of direction. Processed in Ascending order.
-* `depth` - Traversing to a parent increases depth, and traversing to a child decreases depth. Processed in descending order.
-* `wrd` - Uses [Weighted Relationship distance](http://fht.byu.edu/prev_workshops/workshop13/papers/baker-beyond-fhtw2013.pdf). Processed in ascending order.
+* `distance` - Every relationship followed increases the distance by one, regardless of direction.
+* `ancestry` - Will travel parent links first, then marriage, then children.
+* `descendancy` - Will travel children links first, then marriage, then parents.
+* `wrd` - Uses [Weighted Relationship distance](http://fht.byu.edu/prev_workshops/workshop13/papers/baker-beyond-fhtw2013.pdf).
 
 ````javascript
 traversal.order('distance')...
