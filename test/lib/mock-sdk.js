@@ -83,6 +83,25 @@ module.exports = function(graph) {
             };
             return marriage;
           });
+        },
+        
+        getChildRelationships: function(){
+          var childofs = _.filter(graph.childofs, function(childof){
+            return childof.father === personId || childof.mother === personId;
+          });
+          // Add mock helper functions for child relationships
+          return _.map(childofs, function(childof){
+            childof.$getChildId = function(){
+              return childof.child;
+            };
+            childof.$getFatherId = function(){
+              return childof.father;
+            };
+            childof.$getMotherId = function(){
+              return childof.mother;
+            };
+            return childof;
+          });
         }
       
       });
