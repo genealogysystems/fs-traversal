@@ -59,13 +59,29 @@ module.exports = function(graph) {
         },
         
         getSpouseIds: function(){
-          var marriages = _.filter(graph.marriages, function(marriage){
-            return _.contains(marriage.spouses, personId);
-          });
+          var marriages = this.getSpouseRelationships();
           return _.map(marriages, function(marriage){
-            return _.find(marriage.spouses, function(spouseId){
-              return spouseId !== personId;
-            });
+            if(marriage.husband !== personId){
+              return marriage.husband;
+            } else {
+              return marriage.wife;
+            }
+          });
+        },
+        
+        getSpouseRelationships: function(){
+          var marriages = _.filter(graph.marriages, function(marriage){
+            return marriage.husband === personId || marriage.wife === personId;
+          });
+          // Add mock helper functions for spouse relationships
+          return _.map(marriages, function(marriage){
+            marriage.$getHusbandId = function(){
+              return marriage.husband;
+            };
+            marriage.$getWifeId = function(){
+              return marriage.wife;
+            };
+            return marriage;
           });
         }
       

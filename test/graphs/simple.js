@@ -9,8 +9,8 @@ module.exports = {
   ],
   
   marriages: [    
-    {spouses:['1','2']},
-    {spouses:['3','4']}
+    {husband:'1', wife:'2'},
+    {husband:'3', wife:'4'}
   ],
     
   childofs: [

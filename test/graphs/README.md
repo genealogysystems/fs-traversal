@@ -16,11 +16,9 @@ Mock family trees (graphs) used during testing.
     {id:4, name:'mother'}
   ],
   
-  // I know that it seems like a waste to have an object with one
-  // attribute but I'm allowing for additional data in the future
   marriages: [    
-    {spouses:[1,2]},
-    {spouses:[3,4]}
+    {husband:'1', wife:'2'},
+    {husband:'3', wife:'4'}
   ],
   
   childofs: [

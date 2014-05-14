@@ -12,6 +12,10 @@ describe('Mock SDK', function(){
       expect(response.getFatherIds()).to.deep.equal(['3']);
       expect(response.getMotherIds()).to.deep.equal(['4']);
       expect(response.getSpouseIds()).to.deep.equal(['2']);
+      var spouses = response.getSpouseRelationships();
+      expect(spouses).to.have.length(1);
+      expect(spouses[0].$getHusbandId()).to.equal('1');
+      expect(spouses[0].$getWifeId()).to.equal('2');
       done();
     }).fail(function(e){
       console.log(e);
@@ -26,6 +30,10 @@ describe('Mock SDK', function(){
       expect(response.getFatherIds()).to.deep.equal([]);
       expect(response.getMotherIds()).to.deep.equal([]);
       expect(response.getSpouseIds()).to.deep.equal(['1']);
+      var spouses = response.getSpouseRelationships();
+      expect(spouses).to.have.length(1);
+      expect(spouses[0].$getHusbandId()).to.equal('1');
+      expect(spouses[0].$getWifeId()).to.equal('2');
       done();
     }).fail(function(e){
       console.log(e);
