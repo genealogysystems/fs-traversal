@@ -59,7 +59,9 @@ module.exports = function(graph) {
         },
         
         getSpouseIds: function(){
-          var marriages = this.getSpouseRelationships();
+          var marriages = _.filter(graph.marriages, function(marriage){
+            return marriage.husband === personId || marriage.wife === personId;
+          });
           return _.map(marriages, function(marriage){
             if(marriage.husband !== personId){
               return marriage.husband;
@@ -75,13 +77,14 @@ module.exports = function(graph) {
           });
           // Add mock helper functions for spouse relationships
           return _.map(marriages, function(marriage){
-            marriage.$getHusbandId = function(){
-              return marriage.husband;
+            return {
+              '$getHusbandId': function(){
+                return marriage.husband;
+              },
+              '$getWifeId': function(){
+                return marriage.wife;
+              }
             };
-            marriage.$getWifeId = function(){
-              return marriage.wife;
-            };
-            return marriage;
           });
         },
         
@@ -91,16 +94,17 @@ module.exports = function(graph) {
           });
           // Add mock helper functions for child relationships
           return _.map(childofs, function(childof){
-            childof.$getChildId = function(){
-              return childof.child;
+            return {
+              $getChildId: function(){
+                return childof.child;
+              },
+              $getFatherId: function(){
+                return childof.father;
+              },
+              $getMotherId: function(){
+                return childof.mother;
+              }
             };
-            childof.$getFatherId = function(){
-              return childof.father;
-            };
-            childof.$getMotherId = function(){
-              return childof.mother;
-            };
-            return childof;
           });
         }
       
