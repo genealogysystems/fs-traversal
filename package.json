@@ -18,7 +18,7 @@
     "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js"
   },
   "dependencies": {
-    "async": "~0.8.0"
+    "async": "git+https://git@github.com/justincy/async.git#priorityQueue"
   },
   "devDependencies": {
     "chai": "~1.9.1",

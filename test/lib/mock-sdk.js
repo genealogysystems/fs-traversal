@@ -25,6 +25,12 @@ module.exports = function(graph) {
           return personId;
         },
         
+        getPrimaryPerson: function(){
+          return _.find(graph.persons, function(person){
+            return person.id === personId;
+          });
+        },
+        
         getChildIds: function(){
           var childofs = _.filter(graph.childofs, function(childof){
             return childof.father === personId || childof.mother === personId;
