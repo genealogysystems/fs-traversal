@@ -85,8 +85,12 @@
           });
 
           var source = editor.getSession().toString();
-          eval(source);
-
+          $('#output').empty();
+          try {
+            eval(source);
+          } catch(e) {
+            $('#output').append($('<div class="console-message">').text(e.message));
+          }
         });
 
         $('.example').click(function() {
