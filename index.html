@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>FSTraversal</title>
+    <style type="text/css">
+      body: {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+      }
+      #left-pane {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 200px;
+      }
+      #right-pane {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin-left: 200px;
+      }
+      #vars-block {
+        position: absolute;
+        width: 100%;
+        height: 100px;
+      }
+      #examples {
+        position: absolute;
+        top: 100px;
+        width: 100%;
+      }
+      #editor { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin-bottom: 100px;
+      }
+      #output { 
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100px;
+        background-color: 'yellow';
+      }
+
+      .example {
+        height: 25px;
+      }
+
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+    <script src="http://rootsdev.org/familysearch-javascript-sdk/familysearch-javascript-sdk.js"></script>
+    <script src="fs-traversal.js"></script>
+    <script>
+      $(document).ready(function() {
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/javascript");
+
+        $('#run').click(function() {
+          // Make sure we have an access token
+          var token = $('#fs-token').val();
+
+          FamilySearch.init({
+            app_key: 'fs-traversal-demo',
+            environment: 'production',
+            http_function: $.ajax,
+            deferred_function: $.Deferred,
+            access_token:token
+          });
+
+          var source = editor.getSession().toString();
+          eval(source);
+
+        });
+
+        $('.example').click(function() {
+          var scriptId = 'examples/'+$(this).data('example')+'.js';
+          $.get( scriptId, function( data ) {
+            editor.getSession().getDocument().setValue(data);
+          }, 'text');
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+    <div id="left-pane">
+      <div id="vars-block">
+        <input type="text" id="fs-token" placeholder="FamilySearch token"/>
+        <button type="button" id="run">Run It!</button>
+      </div>
+      <div id="examples">
+        <div class="example" data-example="basic">
+          Visit all the people!
+        </div>
+        <div class="example" data-example="basic2">
+          Visit moar people!
+        </div>
+      </div>
+    </div>
+    <div id="right-pane">
+      <div id="editor"></div>
+      <div id="output">
+      </div>
+    </div>
+  </body>
+</html>
