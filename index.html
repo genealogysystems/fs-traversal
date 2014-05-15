@@ -65,6 +65,9 @@
     <script src="fs-traversal.js"></script>
     <script>
       $(document).ready(function() {
+        
+        takeOverConsole();
+
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/javascript");
@@ -94,12 +97,36 @@
         });
 
       });
+
+      function takeOverConsole(){
+        var console = window.console;
+        if (!console) return;
+        function intercept(method){
+          var original = console[method];
+          console[method] = function(){
+            // do sneaky stuff
+            $('#output').append($('<div class="console-message">').text(Array.prototype.slice.apply(arguments).join(' ')));
+
+            if (original.apply){
+              // Do this for normal browsers
+              original.apply(console, arguments)
+            }else{
+              // Do this for IE
+              var message = Array.prototype.slice.apply(arguments).join(' ');
+              original(message);
+            }
+          }
+        }
+        var methods = ['log', 'warn', 'error'];
+        for (var i = 0; i < methods.length; i++)
+          intercept(methods[i]);
+    }
     </script>
   </head>
   <body>
     <div id="left-pane">
       <div id="vars-block">
-        <input type="text" id="fs-token" placeholder="FamilySearch token"/><br />
+        <input type="text" id="fs-token" placeholder="FamilySearch token" value="USYSC756287F95D8C3C169DD224CD484F625_idses-prod04.a.fsglobal.net"/><br />
         <button type="button" id="run">Run It!</button>
       </div>
       <div id="examples">
