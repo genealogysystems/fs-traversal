@@ -123,7 +123,7 @@ traversal.person(personCallback)...
 ### .parent(function)
 Specify a function to be called for each child-parent pair visited in the traversal. You may call this function multiple times to register multiple callbacks. Note that if a child has two or more parents this function will be called once for each pair.
 ````javascript
-function parentCallback(parent, child, childRelationshipId) {
+function parentCallback(parent, child) {
   
 }
 
@@ -135,13 +135,11 @@ traversal.parent(parentCallback)...
 * `parent` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * `child` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 
-* `childRelationshipId` is the ternary child-parent-parent relationship identifier.
-
 
 ### .child(function)
 Specify a function to be called for each child-parent-parent ternary relationship visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
-function childCallback(child, mother, father, childRelationshipId) {
+function childCallback(child, mother, father, childRelationship) {
   
 }
 
@@ -153,14 +151,14 @@ traversal.child(childCallback)...
 * `child` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * `mother` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * `father` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
-* `childRelationshipId` is the ternary child-parent-parent relationship identifier.
+* `childRelationship` is an instance of a [FamilySearch SDK ChildAndParents](http://rootsdev.org/familysearch-javascript-sdk/#/api/parentsAndChildren.types:constructor.ChildAndParents).
 
 
 
 ### .marriage(function)
 Specify a function to be called for each marriage relationship visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
-function marriageCallback(wife, husband, marriageId) {
+function marriageCallback(wife, husband, marriage) {
   
 }
 
@@ -171,7 +169,7 @@ traversal.child(marriageCallback)...
 
 * `wife` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * `husband` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
-* `marriageId` is the marriage relationship identifier.
+* `marriage` is an instance of a [FamilySearch SDK Couple](http://rootsdev.org/familysearch-javascript-sdk/#/api/spouses.types:constructor.Couple).
 
 
 ### .status()

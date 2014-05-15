@@ -24,16 +24,18 @@ describe('traversal - wrd', function(){
         visitedPersons.push(person);
         expect(this._calcWeight(this._fetched[person.id])).to.be.closeTo(weights[person.id], .01);
       })
-      .marriage(function(wife, husband){
+      .marriage(function(wife, husband, marriage){
         expect(visitedPersons).to.deep.include.members([wife]);
         expect(visitedPersons).to.deep.include.members([husband]);
+        expect(marriage).to.exist;
         expect(graph.marriages).to.deep.include.members([{husband: husband.id, wife: wife.id}]);
         marriageCount++;
       })
-      .child(function(child, mother, father){
+      .child(function(child, mother, father, relationship){
         expect(visitedPersons).to.deep.include.members([child]);
         expect(visitedPersons).to.deep.include.members([mother]);
         expect(visitedPersons).to.deep.include.members([father]);
+        expect(relationship).to.exist;
         expect(graph.childofs).to.deep.include.members([{child: child.id, father: father.id, mother: mother.id}]);
         childCount++;
       })
