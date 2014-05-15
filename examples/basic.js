@@ -4,4 +4,4 @@ FSTraversal(FamilySearch)
   .person(function(person, callback) {
     console.log('visited ' + person.$getDisplayName());
   })
-  .traverse('LZNY-BRX');
+  .traverse();
