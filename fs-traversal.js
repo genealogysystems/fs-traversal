@@ -138,7 +138,24 @@ module.exports = function(sdk) {
     /**
      * Traversal function returns a new object with new state.
      */
-    traverse: function(start) {
+    traverse: function() {
+      var self = this;
+
+      if(arguments.length == 1) {
+        self._traverse(arguments[0]);
+      } else {
+        self._sdk.getCurrentUser().done(function(response){
+          self._traverse(response.getUser().personId);
+        });
+      }
+
+      return self;
+    },
+
+    /**
+     * Internal traversal function
+     */
+    _traverse: function(start) {
       var self = this;
 
       // Make sure a start point was given
