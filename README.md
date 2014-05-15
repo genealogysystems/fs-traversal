@@ -6,7 +6,6 @@ A traversal framework for FamilySearch using the visitor pattern.
 FamilySearch.init({access_token: '12345'});
 
 var traversal = FSTraversal(FamilySearch);
-
 ````
 
 # Examples
@@ -86,6 +85,7 @@ traversal.filter(parentsOnly)...
 
 * `personId`
 * `relationships` is an object keyed by the person id with a value that looks like:
+
     ````javascript
     {
       type: 'child', // One of child, mother, father, or marriage.
@@ -107,11 +107,9 @@ traversal.filter(parentsOnly)...
 ### .person(function)
 Specify a function to be called for each person visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
-function personCallback(person) {
-  
-}
+traversal.person(function(person){
 
-traversal.person(personCallback)...
+})
 ````
 
 **Parameters**
@@ -123,11 +121,9 @@ traversal.person(personCallback)...
 ### .parent(function)
 Specify a function to be called for each child-parent pair visited in the traversal. You may call this function multiple times to register multiple callbacks. Note that if a child has two or more parents this function will be called once for each pair.
 ````javascript
-function parentCallback(parent, child) {
-  
-}
+traversal.parent(function(parent, child){
 
-traversal.parent(parentCallback)...
+})
 ````
 
 **Parameters**
@@ -139,11 +135,9 @@ traversal.parent(parentCallback)...
 ### .child(function)
 Specify a function to be called for each child-parent-parent ternary relationship visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
-function childCallback(child, mother, father, childRelationship) {
-  
-}
+traversal.child(function(child, mother, father, childRelationship){
 
-traversal.child(childCallback)...
+})
 ````
 
 **Parameters**
@@ -158,11 +152,9 @@ traversal.child(childCallback)...
 ### .marriage(function)
 Specify a function to be called for each marriage relationship visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
-function marriageCallback(wife, husband, marriage) {
-  
-}
+traversal.child(function(wife, husband, marriage){
 
-traversal.child(marriageCallback)...
+})
 ````
 
 **Parameters**
@@ -204,11 +196,9 @@ traversal.resume();
 ### .error(function)
 Called on Error.
 ````javascript
-function errorCallback(personId, error) {
-  
-}
+traversal.error(function(personId, error){
 
-traversal.error(errorCallback)...
+})
 ````
 
 **Parameters**
@@ -219,17 +209,10 @@ traversal.error(errorCallback)...
 ### .done(function)
 Called when the traversal is complete.
 ````javascript
-function errorCallback() {
-  
-}
+traversal.error(function(){
 
-traversal.error(errorCallback)...
+})
 ````
-
-**Parameters**
-
-`None`
-
 
 ### .traverse(start)
 Begin the traversal starting at `start`, which should be a valid FS Person Id.
