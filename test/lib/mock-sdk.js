@@ -90,7 +90,7 @@ module.exports = function(graph) {
         
         getChildRelationships: function(){
           var childofs = _.filter(graph.childofs, function(childof){
-            return childof.father === personId || childof.mother === personId;
+            return childof.father === personId || childof.mother === personId || childof.child === personId;
           });
           // Add mock helper functions for child relationships
           return _.map(childofs, function(childof){

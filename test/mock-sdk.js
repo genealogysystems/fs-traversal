@@ -17,10 +17,7 @@ describe('Mock SDK', function(){
       expect(spouses[0].$getHusbandId()).to.equal('1');
       expect(spouses[0].$getWifeId()).to.equal('2');
       var childParents = response.getChildRelationships();
-      expect(childParents).to.have.length(1);
-      expect(childParents[0].$getChildId()).to.equal('5');
-      expect(childParents[0].$getFatherId()).to.equal('1');
-      expect(childParents[0].$getMotherId()).to.equal('2');
+      expect(childParents).to.have.length(2);
       done();
     }).fail(function(e){
       console.log(e);
@@ -107,7 +104,7 @@ describe('Mock SDK', function(){
       var spouses = response.getSpouseRelationships();
       expect(spouses).to.have.length(0);
       var childParents = response.getChildRelationships();
-      expect(childParents).to.have.length(0);
+      expect(childParents).to.have.length(1);
       done();
     }).fail(function(e){
       console.log(e);
