@@ -214,11 +214,6 @@ traversal.error(function(){
 })
 ````
 
-**Parameters**
-
-`None`
-
-
 ### .traverse(start)
 Begin the traversal starting at `start`, which should be a valid FS Person Id.
 ````javascript
