@@ -6,7 +6,6 @@ A traversal framework for FamilySearch using the visitor pattern.
 FamilySearch.init({access_token: '12345'});
 
 var traversal = FSTraversal(FamilySearch);
-
 ````
 
 # Examples
@@ -86,6 +85,7 @@ traversal.filter(parentsOnly)...
 
 * `personId`
 * `relationships` is an object keyed by the person id with a value that looks like:
+
     ````javascript
     {
       type: 'child', // One of child, mother, father, or marriage.
