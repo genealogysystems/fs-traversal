@@ -74,6 +74,9 @@ module.exports = function(sdk) {
       return this;
     },
     
+    /**
+     * Set a limit on the number of people to visit
+     */
     limit: function(num) {
       if(typeof num !== 'number') {
         throw new Error('invalid limit');
@@ -83,6 +86,9 @@ module.exports = function(sdk) {
       return this;
     },
     
+    /**
+     * Set the concurrency of the queue
+     */
     concurrency: function(num) {
       if(typeof num !== 'number') {
         throw new Error('invalid concurrency');
@@ -95,6 +101,26 @@ module.exports = function(sdk) {
       }
 
       return this;
+    },
+    
+    /**
+     * Pause the traversal
+     */
+    pause: function(){
+      if(this._queue){
+        this._queue.pause();
+        this._status = 'paused';
+      }
+    },
+    
+    /**
+     * Resume a paused traversal
+     */
+    resume: function(){
+      if(this._queue && this._queue.paused){
+        this._queue.resume();
+        this._status = 'running';
+      }
     },
 
     /**
