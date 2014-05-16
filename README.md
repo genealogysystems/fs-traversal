@@ -235,5 +235,5 @@ traversal.error(function(){
 Begin the traversal starting at `start`, which should be a valid FS Person Id.
 If start is not passed in, the traversal will start from the user returned by `FamilySearch.getCurrentUser()`.
 ````javascript
-traversal.traverse(`LZNY-BRX`);
+traversal.traverse('LZNY-BRX');
 ````
