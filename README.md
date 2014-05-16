@@ -23,7 +23,7 @@ traversal.traverse();
 ````
 
 # Examples
-See genealogysystems.github.io/fs-traversal
+See [genealogysystems.github.io/fs-traversal](genealogysystems.github.io/fs-traversal).
 
 # Testing
 We have a fairly comprehensive test suite, as well as a mock FamilySearch SDK.
