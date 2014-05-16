@@ -237,6 +237,7 @@ module.exports = function(sdk) {
       
       // Fire done callbacks when the queue drains
       self._queue.drain = function(){
+        self._status = 'done';
         each(self._callbacks.done, function(cb){
           setTimeout(function(){ 
             cb.call(self); 
@@ -327,7 +328,7 @@ module.exports = function(sdk) {
       var filtered = [rels];
       each(self._callbacks.filter, function(cb){
         // Pass in a copy of rels
-        filtered.push(cb.call(self, JSON.parse(JSON.stringify(rels))));
+        filtered.push(cb.call(self, id, JSON.parse(JSON.stringify(rels))));
       });
 
       // Add and sort only those ids who were not filtered out. 
