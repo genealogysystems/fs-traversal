@@ -108,7 +108,7 @@ traversal.filter(parentsOnly)...
 Specify a function to be called for each person visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
 traversal.person(function(person){
-
+  console.log('visited '+person.$getDisplayName());
 })
 ````
 
@@ -122,7 +122,7 @@ traversal.person(function(person){
 Specify a function to be called for each child-parent pair visited in the traversal. You may call this function multiple times to register multiple callbacks. Note that if a child has two or more parents this function will be called once for each pair.
 ````javascript
 traversal.parent(function(parent, child){
-
+  console.log(child.$getDisplayName()+' is the child of '+parent.$getDisplayName());
 })
 ````
 
@@ -136,7 +136,9 @@ traversal.parent(function(parent, child){
 Specify a function to be called for each child-parent-parent ternary relationship visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
 traversal.child(function(child, mother, father, childRelationship){
-
+  console.log('child:'+child.$getDisplayName());
+  console.log('mother:'+mother.$getDisplayName());
+  console.log('father:'+father.$getDisplayName());
 })
 ````
 
@@ -152,8 +154,8 @@ traversal.child(function(child, mother, father, childRelationship){
 ### .marriage(function)
 Specify a function to be called for each marriage relationship visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
-traversal.child(function(wife, husband, marriage){
-
+traversal.marriage(function(wife, husband, marriage){
+  console.log(wife.$getDisplayName()+' married '+husband.$getDisplayName());
 })
 ````
 
