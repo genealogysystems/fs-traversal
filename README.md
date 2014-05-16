@@ -6,6 +6,19 @@ A traversal framework for FamilySearch using the visitor pattern.
 FamilySearch.init({access_token: '12345'});
 
 var traversal = FSTraversal(FamilySearch);
+
+traversal
+  .limit(10)
+  .order('distance')
+  .concurrency(2)
+  .person(function(person) {
+    console.log('visited '+person.$getDisplayName());
+  })
+  .done(function() {
+    console.log('done!');
+  });
+
+traversal.traverse();
 ````
 
 # Examples
@@ -199,7 +212,8 @@ traversal.resume();
 Called on Error.
 ````javascript
 traversal.error(function(personId, error){
-
+  console.error('Something went wrong fetching person '+personId);
+  console.error(error);
 })
 ````
 
@@ -212,12 +226,13 @@ traversal.error(function(personId, error){
 Called when the traversal is complete.
 ````javascript
 traversal.error(function(){
-
+  console.log('Traversal Complete!');
 })
 ````
 
-### .traverse(start)
+### .traverse([start])
 Begin the traversal starting at `start`, which should be a valid FS Person Id.
+If start is not passed in, the traversal will start from the user returned by `FamilySearch.getCurrentUser()`.
 ````javascript
 traversal.traverse(`LZNY-BRX`);
 ````
