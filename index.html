@@ -3,14 +3,13 @@
   <head>
     <meta charset="utf-8">
     <title>FSTraversal</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
-      body: {
-        margin: 0;
-        padding: 0;
-        position: relative;
-        width: 100%;
-        height: 100%;
-
+      body {
+        background-color: #eee;
+      }
+      h1 {
+        font-size: 25px;
       }
       #left-pane {
         position: absolute;
@@ -28,14 +27,16 @@
         margin-left: 300px;
       }
       #vars-block {
-        position: absolute;
-        width: 100%;
-        height: 100px;
+        margin: 5px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #ccc;
       }
       #examples {
-        position: absolute;
-        top: 100px;
-        width: 100%;
+        margin-top: 30px;
+        padding: 5px;
+        padding-top: 15px;
+        border-top: 1px solid #ccc;
       }
       #editor { 
         position: absolute;
@@ -43,21 +44,16 @@
         right: 0;
         bottom: 0;
         left: 0;
-        margin-bottom: 100px;
+        margin-bottom: 150px;
       }
       #output { 
         position: absolute;
         right: 0;
         bottom: 0;
         left: 0;
-        height: 100px;
-        background-color: 'yellow';
+        margin: 0;
+        height: 150px;
       }
-
-      .example {
-        height: 25px;
-      }
-
     </style>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
@@ -93,12 +89,14 @@
           }
         });
 
-        $('.example').click(function() {
+        var examples = $('.example').click(function() {
+          $('.example.active').removeClass('active');
+          $(this).addClass('active');
           var scriptId = 'examples/'+$(this).data('example')+'.js';
           $.get( scriptId, function( data ) {
             editor.getSession().getDocument().setValue(data);
           }, 'text');
-        });
+        }).first().click();
 
       });
 
@@ -129,26 +127,27 @@
   </head>
   <body>
     <div id="left-pane">
+      <h1><a href="https://github.com/genealogysystems/fs-traversal">FSTraversal Demo</a></h1>
       <div id="vars-block">
-        <input type="text" id="fs-token" placeholder="FamilySearch token" /><br />
-        <button type="button" id="run">Run It!</button>
+        <div class="form-group">
+          <label for="fs-token">Access Token</label>
+          <p>Get an <a href="https://familysearch.org/platform/">access token</a> then paste it in the input field below.</p>
+          <input type="text" class="form-control" id="fs-token" placeholder="access token" />
+        </div>
+        <button class="btn btn-primary" id="run">Run It!</button>
       </div>
       <div id="examples">
-        <div class="example" data-example="basic">
-          A Basic Example.
-        </div>
-        <div class="example" data-example="throttled">
-          Throttle yourself.
-        </div>
-        <div class="example" data-example="kitchen-sink">
-          The kitchen sink.
-        </div>
+        <h3>Examples</h3>
+        <ul class="list-group">
+          <a class="example list-group-item" data-example="basic">A Basic Example</a>
+          <a class="example list-group-item" data-example="throttled">Throttle yourself</a>
+          <a class="example list-group-item" data-example="kitchen-sink">The kitchen sink</a>
+        </ul>
       </div>
     </div>
     <div id="right-pane">
       <div id="editor"></div>
-      <div id="output">
-      </div>
+      <pre id="output"></pre>
     </div>
   </body>
 </html>
