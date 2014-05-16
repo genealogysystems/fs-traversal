@@ -1,5 +1,6 @@
 # fs-traversal
 A traversal framework for FamilySearch using the visitor pattern.
+Requires the [FamilySearch Javascript SDK](https://github.com/rootsdev/familysearch-javascript-sdk).
 
 # Usage
 ````javascript
