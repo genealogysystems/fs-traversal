@@ -1,5 +1,6 @@
 # fs-traversal
-A traversal framework for FamilySearch using the visitor pattern.
+Given a starting person, it traverses through the tree (graph) using the visitor pattern to fire callbacks when people and relationships are visited.
+
 Requires the [FamilySearch Javascript SDK](https://github.com/rootsdev/familysearch-javascript-sdk).
 
 # Usage
