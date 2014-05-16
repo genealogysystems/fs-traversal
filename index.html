@@ -108,6 +108,7 @@
           console[method] = function(){
             // do sneaky stuff
             $('#output').append($('<div class="console-message">').text(Array.prototype.slice.apply(arguments).join(' ')));
+            $('#output').scrollTop($('#output')[0].scrollHeight)
 
             if (original.apply){
               // Do this for normal browsers
