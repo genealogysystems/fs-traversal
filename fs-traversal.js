@@ -122,7 +122,7 @@ module.exports = function(sdk) {
 
       var path = this._fetched[id].path;
 
-      return path;
+      return this._relationshipTo(path);
     },
 
     /**
