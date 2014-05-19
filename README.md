@@ -148,6 +148,21 @@ traversal.parent(function(parent, child){
 
 
 
+### .parents(function)
+Specify a function to be called for a person and all of their parents. You may call this function multiple times to register multiple callbacks.
+````javascript
+traversal.parents(function(person, parents){
+  console.log('person:'+person.$getDisplayName());
+})
+````
+
+**Parameters**
+
+* `person` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `parents` is an array of [FamilySearch SDK Persons](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+
+
+
 ### .child(function)
 Specify a function to be called for each child-parent-parent ternary relationship visited in the traversal. You may call this function multiple times to register multiple callbacks.
 ````javascript
@@ -168,7 +183,7 @@ traversal.child(function(child, mother, father, childRelationship){
 
 
 ### .children(function)
-Specify a function to be called for a person and all of their children the traversal. You may call this function multiple times to register multiple callbacks.
+Specify a function to be called for a person and all of their children. You may call this function multiple times to register multiple callbacks.
 ````javascript
 traversal.children(function(person, children){
   console.log('person:'+person.$getDisplayName());

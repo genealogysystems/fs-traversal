@@ -3,7 +3,7 @@ var expect = require('chai').expect,
     sdk = require('./lib/mock-sdk.js')(graph),
     FSTraversal = require('./../lib/fs-traversal.js');
     
-describe('childrentest', function(){
+describe('children', function(){
   
   it('should return all children', function(done){
         
