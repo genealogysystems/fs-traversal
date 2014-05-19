@@ -61,6 +61,19 @@ traversal.order('distance')...
 
 
 
+### .wrd(object)
+Sets the WRD factors for the traversal. They all default to `1`.
+````javascript
+traversal.wrd({
+  gPositive: 1,
+  gNegative: 1.76,
+  c: 1,
+  m: 1.42
+})...
+````
+
+
+
 ### .concurrency(number)
 The maximum number of concurrent requests to the FamilySearch API. Defaults to `5`.
 ````javascript

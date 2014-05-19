@@ -1,6 +1,11 @@
 var expect = require('chai').expect,
     wrds = require('./lib/wrds.js'),
-    traverse = require('./../lib/fs-traversal.js')({});
+    traverse = require('./../lib/fs-traversal.js')({}).wrd({
+      gPositive: 1,
+      gNegative: 1.76,
+      c: 1,
+      m: 1.42
+    });
     
 describe('_calcWeight', function(){
 

@@ -20,6 +20,12 @@ describe('traversal - wrd', function(){
         
     FSTraversal(sdk)
       .order('wrd')
+      .wrd({
+        gPositive: 1,
+        gNegative: 1.76,
+        c: 1,
+        m: 1.42
+      })
       .person(function(person){
         visitedPersons.push(person);
         expect(this._calcWeight(this._fetched[person.id])).to.be.closeTo(weights[person.id], .01);
