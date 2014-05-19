@@ -19,7 +19,7 @@ module.exports = function(sdk) {
 
     /**
      * The object of persons we've visited, keyed by id.
-     * Note that the value is the person object returned by the sdk.
+     * Note that the value is the person-with-relationships object returned by the sdk.
      */
     _visited: {},
 
@@ -130,6 +130,7 @@ module.exports = function(sdk) {
       filter: [],
       person: [],
       child: [],
+      children: [],
       parent: [],
       marriage: [],
       data_person: [],
@@ -146,6 +147,7 @@ module.exports = function(sdk) {
     filter: function(func) {this._registerCallback('filter', func); return this;},
     person: function(func) {this._registerCallback('person', func); return this;},
     child: function(func) {this._registerCallback('child', func); return this;},
+    children: function(func) {this._registerCallback('children', func); return this;},
     parent: function(func) {this._registerCallback('parent', func); return this;},
     marriage: function(func) {this._registerCallback('marriage', func); return this;},
     done: function(func) {this._registerCallback('done', func); return this;},
@@ -364,10 +366,10 @@ module.exports = function(sdk) {
       });
 
       // Visit Person and mark as visited
-      self._visited[id] = person.getPrimaryPerson();
+      self._visited[id] = person;
       each(self._callbacks.person, function(cb) {
         setTimeout(function() {
-          cb.call(self, self._visited[id]);
+          cb.call(self, self._visited[id].getPrimaryPerson());
         });
       });
       
@@ -379,7 +381,7 @@ module.exports = function(sdk) {
         if(self._visited[husbandId] && self._visited[wifeId]) {
           each(self._callbacks.marriage, function(cb){
             setTimeout(function() {
-              cb.call(self, self._visited[wifeId], self._visited[husbandId], marriage);
+              cb.call(self, self._visited[wifeId].getPrimaryPerson(), self._visited[husbandId].getPrimaryPerson(), marriage);
             });
           })
         }
@@ -387,13 +389,22 @@ module.exports = function(sdk) {
 
       // Visit Child (only when visited all persons)
       // Visit Parent (only when visited all persons)
-      var childParents = person.getChildRelationships();
+      var childParents = person.getChildRelationships(),
+          childrenCheck = [id]; // Always check this person as well as all of their parents
       each(childParents, function(childParent){
         
         var childId = childParent.$getChildId(),
             motherId = childParent.$getMotherId(),
             fatherId = childParent.$getFatherId();
         
+        // Add each parent to the childrenCheck.
+        if(id == childId && motherId) {
+          childrenCheck.push(motherId);
+        }
+        if(id == childId && fatherId) {
+          childrenCheck.push(fatherId);
+        }
+
         if(self._visited[childId] 
             && (!motherId || self._visited[motherId])
             && (!fatherId || self._visited[fatherId]) ) {
@@ -401,25 +412,55 @@ module.exports = function(sdk) {
           // Call the child callback
           each(self._callbacks.child, function(cb){
             setTimeout(function() {
-              cb.call(self, self._visited[childId], self._visited[motherId], self._visited[fatherId], childParent);
+              cb.call(self, self._visited[childId].getPrimaryPerson(), self._visited[motherId].getPrimaryPerson(), self._visited[fatherId].getPrimaryPerson(), childParent);
             });
           });
 
           // Call the parent callback with mother
           each(self._callbacks.parent, function(cb){
             setTimeout(function() {
-              cb.call(self, self._visited[motherId], self._visited[childId]);
+              cb.call(self, self._visited[motherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
             });
           });
 
           // Call the parent callback with father
           each(self._callbacks.parent, function(cb){
             setTimeout(function() {
-              cb.call(self, self._visited[fatherId], self._visited[childId]);
+              cb.call(self, self._visited[fatherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
             });
           });
         }
       });
+
+      // For the person and each parent, see if all of their children have been visited.
+      // If so, call children callback
+      childrenCheck = _unique(childrenCheck);
+//console.log(childrenCheck);
+      each(childrenCheck, function(parent) {
+        if(self._visited[parent]) {
+          var childrenIds = self._visited[parent].getChildIds(),
+              allVisited = true,
+              children = [];
+          each(childrenIds, function(childId){
+            if(!self._visited[childId]) {
+              allVisited = false;
+            } else {
+              children.push(self._visited[childId].getPrimaryPerson());
+            }
+          });
+
+          // Call the parent callback with father if everyone has been visited
+          if(allVisited) {
+            each(self._callbacks.children, function(cb){
+              setTimeout(function() {
+                cb.call(self, self._visited[parent].getPrimaryPerson(), children);
+              });
+            });
+          }
+
+        }
+      });
+
     },
 
     /**
@@ -477,6 +518,17 @@ function _keys(obj) {
   var keys = [];
   for (var key in obj) if (hasOwnProperty.call(obj, key)) keys.push(key);
   return keys;
+};
+
+function _unique(array) {
+  var results = [];
+
+  each(array, function(val){
+    if(results.indexOf(val) == -1) {
+      results.push(val);
+    }
+  });
+  return results;
 };
 
 },{"async":2}],2:[function(_dereq_,module,exports){
