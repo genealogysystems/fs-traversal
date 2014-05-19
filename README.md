@@ -212,6 +212,22 @@ traversal.marriage(function(wife, husband, marriage){
 * `marriage` is an instance of a [FamilySearch SDK Couple](http://rootsdev.org/familysearch-javascript-sdk/#/api/spouses.types:constructor.Couple).
 
 
+
+### .spouses(function)
+Specify a function to be called for a person and all of their spouses. You may call this function multiple times to register multiple callbacks.
+````javascript
+traversal.spouses(function(person, spouses){
+  console.log('person:'+person.$getDisplayName());
+})
+````
+
+**Parameters**
+
+* `person` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `spouses` is an array of [FamilySearch SDK Persons](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+
+
+
 ### .status()
 Will immediately return the current traversal status.
 ````javascript
