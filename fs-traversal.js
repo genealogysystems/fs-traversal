@@ -46,9 +46,9 @@ module.exports = function(sdk) {
       order: 'wrd',
       wrdFactors: {
         gPositive: 1, // We allow different values for g >= 0 vs g < 0
-        gNegative: 1.76,
+        gNegative: 1,
         c: 1,
-        m: 1.42
+        m: 1
       }
     },
     
@@ -74,6 +74,15 @@ module.exports = function(sdk) {
       return this;
     },
     
+    /**
+     * Set the WRD factors.
+     */
+    wrd: function(obj) {
+      this._options.wrdFactors = obj;
+
+      return this;
+    },
+
     /**
      * Set a limit on the number of people to visit
      */
@@ -104,6 +113,114 @@ module.exports = function(sdk) {
     },
     
     /**
+     * Takes in a visited id and produces a string representing the relationship to the root node.
+     */
+    relationshipTo: function(id) {
+      if(!this._fetched[id]) {
+        return '';
+      }
+
+      var path = this._fetched[id].path;
+
+      return path;
+    },
+
+    /**
+     * Internal function that takes a path and returns a string
+     */
+    _relationshipTo: function(path) {
+
+      // Generate switch string
+      var switchStr = '';
+      for(var i = 1; i < path.length; i+=2) {
+        switch(path[i]) {
+          case 'child':
+            switchStr += '↓';
+            break;
+          case 'mother':
+          case 'father':
+            switchStr += '↑';
+            break;
+          case 'spouse':
+            switchStr += '→';
+            break;
+          default:
+            return '';
+        }
+      }
+
+      // Generate relationship
+      var rel = '',
+          remainder = '',
+          match = true,
+          done = false,
+          offset = 2; // Starts at the first related person in the path
+
+      while(!done) {
+        match = true;
+        switch(switchStr) {
+          case '↑':
+            rel += ((rel)?"'s ":'')+'parent';
+            break;
+          case '↓':
+            rel += ((rel)?"'s ":'')+'child';
+            break;
+          case '→':
+            rel += ((rel)?"'s ":'')+'spouse';
+            break;
+          case '↑↑':
+            rel += ((rel)?"'s ":'')+'grandparent';
+            break;
+          case '↑↓':
+            rel += ((rel)?"'s ":'')+'sibling';
+            break;
+          case '↓↓':
+            rel += ((rel)?"'s ":'')+'grandchild';
+            break;
+          case '↑↑↑':
+            rel += ((rel)?"'s ":'')+'great-grandparent';
+            break;
+          case '↑↑↓':
+            rel += ((rel)?"'s ":'')+'uncle';
+            break;
+          case '↓↓↓':
+            rel += ((rel)?"'s ":'')+'great-grandchild';
+            break;
+          case '↑↑↓↓':
+            rel += ((rel)?"'s ":'')+'cousin';
+            break;
+          case '↑↑↑↓':
+            rel += ((rel)?"'s ":'')+'great-uncle';
+            break;
+          default:
+            match = false;
+        }
+
+        if(match) {
+          if(remainder) {
+            offset += (switchStr.length*2);
+            switchStr = remainder;
+            remainder = '';
+          } else {
+            done = true;
+          }
+        } else {
+          remainder = switchStr.substr(-1,1)+remainder;
+          switchStr = switchStr.substr(0,switchStr.length-1);
+
+          // If we empty the switch string without finding anything, add  relative and be done
+          if(!switchStr) {
+            rel += ((rel)?"'s":'')+' relative';
+            done = true;
+          }
+        }
+
+      }
+
+      return rel;
+    },
+
+    /**
      * Pause the traversal
      */
     pause: function(){
@@ -132,7 +249,9 @@ module.exports = function(sdk) {
       child: [],
       children: [],
       parent: [],
+      parents: [],
       marriage: [],
+      spouses: [],
       data_person: [],
       data_child: [],
       data_parent: [],
@@ -149,7 +268,9 @@ module.exports = function(sdk) {
     child: function(func) {this._registerCallback('child', func); return this;},
     children: function(func) {this._registerCallback('children', func); return this;},
     parent: function(func) {this._registerCallback('parent', func); return this;},
+    parents: function(func) {this._registerCallback('parents', func); return this;},
     marriage: function(func) {this._registerCallback('marriage', func); return this;},
+    spouses: function(func) {this._registerCallback('spouses', func); return this;},
     done: function(func) {this._registerCallback('done', func); return this;},
     error: function(func) {this._registerCallback('error', func); return this;},
 
@@ -374,10 +495,20 @@ module.exports = function(sdk) {
       });
       
       // Visit Marriages (only when visited all persons)
-      var marriages = person.getSpouseRelationships();
+      var marriages = person.getSpouseRelationships(),
+          spouseCheck = [id]; // Always check this person as well as all of their spouses
       each(marriages, function(marriage){
         var husbandId = marriage.$getHusbandId(),
             wifeId = marriage.$getWifeId();
+
+        if(id == husbandId && wifeId) {
+          spouseCheck.push(wifeId);
+        }
+
+        if(id == wifeId && husbandId) {
+          spouseCheck.push(husbandId);
+        }
+
         if(self._visited[husbandId] && self._visited[wifeId]) {
           each(self._callbacks.marriage, function(cb){
             setTimeout(function() {
@@ -387,10 +518,38 @@ module.exports = function(sdk) {
         }
       });
 
+      // For the person and each spouse, see if all of their spouses have been visited.
+      // If so, call spouses callback
+      spouseCheck = _unique(spouseCheck);
+      each(spouseCheck, function(fromSpouse) {
+        if(self._visited[fromSpouse]) {
+          var spouseIds = self._visited[fromSpouse].getSpouseIds(),
+              allVisited = true,
+              spouses = [];
+          each(spouseIds, function(spouseId){
+            if(!self._visited[spouseId]) {
+              allVisited = false;
+            } else {
+              spouses.push(self._visited[spouseId].getPrimaryPerson());
+            }
+          });
+
+          // Call the spouses callback if everyone has been visited
+          if(allVisited) {
+            each(self._callbacks.spouses, function(cb){
+              setTimeout(function() {
+                cb.call(self, self._visited[fromSpouse].getPrimaryPerson(), spouses);
+              });
+            });
+          }
+        }
+      });
+
       // Visit Child (only when visited all persons)
       // Visit Parent (only when visited all persons)
       var childParents = person.getChildRelationships(),
-          childrenCheck = [id]; // Always check this person as well as all of their parents
+          childrenCheck = [id], // Always check this person as well as all of their parents
+          parentCheck = [id]; // Always check this person as well as all of their children
       each(childParents, function(childParent){
         
         var childId = childParent.$getChildId(),
@@ -403,6 +562,11 @@ module.exports = function(sdk) {
         }
         if(id == childId && fatherId) {
           childrenCheck.push(fatherId);
+        }
+
+        // Add child to parentCheck
+        if(childId && (id == motherId || id == fatherId)) {
+          parentCheck.push(childId);
         }
 
         if(self._visited[childId] 
@@ -435,7 +599,6 @@ module.exports = function(sdk) {
       // For the person and each parent, see if all of their children have been visited.
       // If so, call children callback
       childrenCheck = _unique(childrenCheck);
-//console.log(childrenCheck);
       each(childrenCheck, function(parent) {
         if(self._visited[parent]) {
           var childrenIds = self._visited[parent].getChildIds(),
@@ -449,7 +612,7 @@ module.exports = function(sdk) {
             }
           });
 
-          // Call the parent callback with father if everyone has been visited
+          // Call the children callback if everyone has been visited
           if(allVisited) {
             each(self._callbacks.children, function(cb){
               setTimeout(function() {
@@ -457,7 +620,32 @@ module.exports = function(sdk) {
               });
             });
           }
+        }
+      });
 
+      // For the person and each child, see if all of their parents have been visited.
+      // If so, call parents callback
+      parentCheck = _unique(parentCheck);
+      each(parentCheck, function(child) {
+        if(self._visited[child]) {
+          var parentIds = _unique(self._visited[child].getFatherIds().concat(self._visited[child].getMotherIds())),
+              allVisited = true,
+              parents = [];
+          each(parentIds, function(parentId){
+            if(!self._visited[parentId]) {
+              allVisited = false;
+            } else {
+              parents.push(self._visited[parentId].getPrimaryPerson());
+            }
+          });
+          // Call the parents callback if everyone has been visited
+          if(allVisited) {
+            each(self._callbacks.parents, function(cb){
+              setTimeout(function() {
+                cb.call(self, self._visited[child].getPrimaryPerson(), parents);
+              });
+            });
+          }
         }
       });
 

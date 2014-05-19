@@ -284,6 +284,9 @@ traversal.error(function(personId, error){
 * `personId`
 * `error`
 
+
+
+
 ### .done(function)
 Called when the traversal is complete.
 ````javascript
@@ -297,4 +300,13 @@ Begin the traversal starting at `start`, which should be a valid FS Person Id.
 If start is not passed in, the traversal will start from the user returned by `FamilySearch.getCurrentUser()`.
 ````javascript
 traversal.traverse('LZNY-BRX');
+````
+
+
+### .relationshipTo(id)
+Call a traveral object and pass in a person-id to get the relationship from the root person to the person-id.
+````javascript
+var str = traversal.relationshipTo(id);
+console.log(str);
+// str is a string, like "grandparent".
 ````
