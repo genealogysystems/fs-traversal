@@ -165,8 +165,8 @@ module.exports = function(sdk) {
       while(!done) {
         match = true;
         gender = undefined;
-        if(this._visited[path[offset]] && this._visited[path[offset]].$getPrimaryPerson()) {
-          gender = this._visited[path[offset]].$getPrimaryPerson().gender;
+        if(this._visited[path[offset]] && this._visited[path[offset]].getPrimaryPerson()) {
+          gender = this._visited[path[offset]].getPrimaryPerson().gender;
         }
         rel = '';
         
