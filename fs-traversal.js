@@ -160,13 +160,15 @@ module.exports = function(sdk) {
           match = true,
           done = false,
           offset = 2, // Starts at the first related person in the path
-          gender;
+          gender,
+          lastPersonOffset;
 
       while(!done) {
         match = true;
         gender = undefined;
-        if(this._visited[path[offset]] && this._visited[path[offset]].getPrimaryPerson()) {
-          gender = this._visited[path[offset]].getPrimaryPerson().gender.type;
+        lastPersonOffset = offset + ((switchStr.length-1)*2);
+        if(this._visited[path[lastPersonOffset]] && this._visited[path[lastPersonOffset]].getPrimaryPerson()) {
+          gender = this._visited[path[lastPersonOffset]].getPrimaryPerson().gender.type;
         }
         rel = '';
         
@@ -258,7 +260,13 @@ module.exports = function(sdk) {
               }
               break;
             case '↑↑↓':
-              rel = 'uncle';
+              if(gender == 'http://gedcomx.org/Male') {
+                rel = 'uncle';
+              } else if(gender == 'http://gedcomx.org/Female') {
+                rel = 'aunt';
+              } else {
+                rel = 'parent\'s sibling';
+              }
               break;
             case '↓↓↓':
               if(gender == 'http://gedcomx.org/Male') {
