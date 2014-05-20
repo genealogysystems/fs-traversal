@@ -240,6 +240,20 @@ traversal.spouses(function(person, spouses){
 * `spouses` is an array of [FamilySearch SDK Persons](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 
 
+### .relationships(function)
+Specify a function to be called for a person and all of their relationships. You may call this function multiple times to register multiple callbacks.
+````javascript
+traversal.relationships(function(person, relationships, people){
+  console.log('person:'+person.$getDisplayName());
+})
+````
+
+**Parameters**
+
+* `person` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `relationships` is an instance of a [FamilySearch SDK PersonWithRelationships](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.functions:getPersonWithRelationships).
+* `people` is an array of [FamilySearch SDK Persons](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+
 
 ### .status()
 Will immediately return the current traversal status.
