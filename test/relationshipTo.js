@@ -77,6 +77,21 @@ describe('relationshipTo', function(){
     expect(str).to.equal('great-uncle\'s child');
   });
   
+  it('2nd great-grandparent', function(){    
+    var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father','father'));
+    expect(str).to.equal('2nd great-grandparent');
+  });
+
+  it('3rd great-grandparent', function(){    
+    var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father','father', 'father'));
+    expect(str).to.equal('3rd great-grandparent');
+  });
+
+  it('4th great-grandparent', function(){    
+    var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father','father', 'father', 'father'));
+    expect(str).to.equal('4th great-grandparent');
+  });
+
 });
 
 /**
