@@ -185,9 +185,9 @@ module.exports = function(sdk) {
         }
 
         if(isGrandparent) {
-          if(gender == 'Male') {
+          if(gender == 'http://gedcomx.org/Male') {
             rel = 'grandfather';
-          } else if(gender == 'Female') {
+          } else if(gender == 'http://gedcomx.org/Female') {
             rel = 'grandmother';
           } else {
             rel = 'grandparent';
@@ -213,45 +213,45 @@ module.exports = function(sdk) {
 
           switch(switchStr) {
             case '↑':
-              if(gender == 'Male') {
+              if(gender == 'http://gedcomx.org/Male') {
                 rel = 'father';
-              } else if(gender == 'Female') {
+              } else if(gender == 'http://gedcomx.org/Female') {
                 rel = 'mother';
               } else {
                 rel = 'parent';
               }
               break;
             case '↓':
-              if(gender == 'Male') {
+              if(gender == 'http://gedcomx.org/Male') {
                 rel = 'son';
-              } else if(gender == 'Female') {
+              } else if(gender == 'http://gedcomx.org/Female') {
                 rel = 'daughter';
               } else {
                 rel = 'child';
               }
               break;
             case '→':
-              if(gender == 'Male') {
+              if(gender == 'http://gedcomx.org/Male') {
                 rel = 'husband';
-              } else if(gender == 'Female') {
+              } else if(gender == 'http://gedcomx.org/Female') {
                 rel = 'wife';
               } else {
                 rel = 'spouse';
               }
               break;
             case '↑↓':
-              if(gender == 'Male') {
+              if(gender == 'http://gedcomx.org/Male') {
                 rel = 'brother';
-              } else if(gender == 'Female') {
+              } else if(gender == 'http://gedcomx.org/Female') {
                 rel = 'sister';
               } else {
                 rel = 'sibling';
               }
               break;
             case '↓↓':
-              if(gender == 'Male') {
+              if(gender == 'http://gedcomx.org/Male') {
                 rel = 'grandson';
-              } else if(gender == 'Female') {
+              } else if(gender == 'http://gedcomx.org/Female') {
                 rel = 'granddaughter';
               } else {
                 rel = 'grandchild';
@@ -261,9 +261,9 @@ module.exports = function(sdk) {
               rel = 'uncle';
               break;
             case '↓↓↓':
-              if(gender == 'Male') {
+              if(gender == 'http://gedcomx.org/Male') {
                 rel = 'great-grandson';
-              } else if(gender == 'Female') {
+              } else if(gender == 'http://gedcomx.org/Female') {
                 rel = 'great-granddaughter';
               } else {
                 rel = 'great-grandchild';
