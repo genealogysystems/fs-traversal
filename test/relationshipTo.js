@@ -83,9 +83,9 @@ describe('relationshipTo', function(){
  * Generate relationship paths in the syntax fs-traversal expects
  */
 function genPath(){
-  var path = [''];
+  var path = ['1'];
   for(var i = 0; i < arguments.length; i++){
-    path.push(arguments[i], '');
+    path.push(arguments[i], '1');
   }
   return path;
 };
