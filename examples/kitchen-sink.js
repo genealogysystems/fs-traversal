@@ -16,6 +16,7 @@ var traversal = FSTraversal(FamilySearch)
   })
   .person(function(person, callback) {
     console.log('visited ' + person.$getDisplayName());
+    console.log('relationship: ' + traversal.relationshipTo(person.id));
   })
   .parent(function(parent, child){
     console.log(child.$getDisplayName()+' is the child of '+parent.$getDisplayName());
