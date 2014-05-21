@@ -675,23 +675,31 @@ module.exports = function(sdk) {
           // Call the child callback
           each(self._callbacks.child, function(cb){
             setTimeout(function() {
-              cb.call(self, self._visited[childId].getPrimaryPerson(), self._visited[motherId].getPrimaryPerson(), self._visited[fatherId].getPrimaryPerson(), childParent);
+              cb.call(self, 
+                self._visited[childId].getPrimaryPerson(), 
+                (motherId)?self._visited[motherId].getPrimaryPerson():undefined, 
+                (fatherId)?self._visited[fatherId].getPrimaryPerson():undefined, 
+                childParent);
             });
           });
 
-          // Call the parent callback with mother
-          each(self._callbacks.parent, function(cb){
-            setTimeout(function() {
-              cb.call(self, self._visited[motherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
+          // Call the parent callback with mother if mother is defined
+          if(motherId) {
+            each(self._callbacks.parent, function(cb){
+              setTimeout(function() {
+                cb.call(self, self._visited[motherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
+              });
             });
-          });
+          }
 
           // Call the parent callback with father
-          each(self._callbacks.parent, function(cb){
-            setTimeout(function() {
-              cb.call(self, self._visited[fatherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
+          if(fatherId) {
+            each(self._callbacks.parent, function(cb){
+              setTimeout(function() {
+                cb.call(self, self._visited[fatherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
+              });
             });
-          });
+          }
         }
       });
 
