@@ -281,7 +281,13 @@ module.exports = function(sdk) {
               rel = 'cousin';
               break;
             case '↑↑↑↓':
-              rel = 'great-uncle';
+              if(gender == 'http://gedcomx.org/Male') {
+                rel = 'great-uncle';
+              } else if(gender == 'http://gedcomx.org/Female') {
+                rel = 'great-aunt';
+              } else {
+                rel = 'great-uncle';
+              }
               break;
             default:
               match = false;
