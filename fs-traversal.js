@@ -113,6 +113,17 @@ module.exports = function(sdk) {
     },
     
     /**
+     * Takes in a visited id and produces an array representing the path of relationship to the root node.
+     */
+    relationshipHow: function(id) {
+      if(!this._fetched[id]) {
+        return '';
+      }
+
+      return this._fetched[id].path;
+    },
+
+    /**
      * Takes in a visited id and produces a string representing the relationship to the root node.
      */
     relationshipTo: function(id) {
