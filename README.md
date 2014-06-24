@@ -324,3 +324,17 @@ var str = traversal.relationshipTo(id);
 console.log(str);
 // str is a string, like "grandparent".
 ````
+
+### .pathTo(id)
+
+Get an array representing the path to a person that has been visited.
+
+```javascript
+var path = traversal.pathTo(id);
+console.log(path);
+// [ Person, 'father', Person, 'mother', Person, ... ]
+``` 
+
+* All person objects are an instance of [FamilySearch.Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* The first person in the array is the start person for the traversal.
+* Possible values for the relationships strings are `child`, `father`, `mother`, `spouse`.

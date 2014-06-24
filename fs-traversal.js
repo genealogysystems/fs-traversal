@@ -113,6 +113,30 @@ module.exports = function(sdk) {
     },
     
     /**
+     * Takes in a visited person id and returns the path array of format:
+     * [startPerson, 'relationship', person, 'relationship', person, ... ]
+     */
+    pathTo: function(id){
+      if(!this._fetched[id] || !this._visited[id]){
+        return [];
+      }
+      
+      var fetchedPath = this._fetched[id].path,
+          returnPath = [];
+          
+      // Add the start person
+      returnPath.push(this._visited[fetchedPath[0]].getPrimaryPerson());
+      
+      // Collect the rest of the people and relationships
+      for(var i = 1; i < fetchedPath.length; i += 2){
+        returnPath.push(fetchedPath[i]);
+        returnPath.push(this._visited[fetchedPath[i+1]].getPrimaryPerson());
+      }
+      
+      return returnPath;
+    },
+    
+    /**
      * Takes in a visited id and produces a string representing the relationship to the root node.
      */
     relationshipTo: function(id) {
