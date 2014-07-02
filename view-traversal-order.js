@@ -3,15 +3,15 @@
  * a given traversal algorithm will visit people.
  */
 var expect = require('chai').expect,
-    graph = require('./graphs/large.js'),
-    sdk = require('./lib/mock-sdk.js')(graph),
-    FSTraversal = require('./../lib/fs-traversal.js');
+    graph = require('./test/graphs/large.js'),
+    sdk = require('./test/lib/mock-sdk.js')(graph),
+    FSTraversal = require('./lib/fs-traversal.js');
 
 var relationships = [],
     order;
     
 // Specify which algorithm we're testing
-if(process.argv[2]){
+if(process.argv[1].indexOf(__filename) !== -1 && process.argv[2]){
   order = process.argv[2];
 } else {
   console.error('Error: Must specify an order');
