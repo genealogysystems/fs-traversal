@@ -32,7 +32,14 @@ module.exports = {
     {id:'29', name:'sister'},
     {id:'30', name:'brother-in-law'},
     {id:'31', name:'neice'},
-    {id:'32', name:'neices husband'}
+    {id:'32', name:'neices husband'},
+    {id:'33', name:'daughter-in-law'},
+    {id:'34', name:'granddaughter'},
+    {id:'35', name:'grandson-in-law'},
+    {id:'36', name:'granddaughters husbands father'},
+    {id:'37', name:'granddaughters husbands mother'},
+    {id:'38', name:'granddaughters husbands grandfather'},
+    {id:'39', name:'granddaughters husbands grandmother'}
   ],
   
   marriages: [    
@@ -49,7 +56,11 @@ module.exports = {
     {husband:'24', wife:'25'},
     {husband:'26', wife:'27'},
     {husband:'30', wife:'29'},
-    {husband:'32', wife:'31'}
+    {husband:'32', wife:'31'},
+    {husband:'5', wife:'33'},
+    {husband:'35', wife:'34'},
+    {husband:'36', wife:'37'},
+    {husband:'38', wife:'39'}
   ],
     
   childofs: [
@@ -69,7 +80,10 @@ module.exports = {
     {child:'27', father:'24', mother:'25'},
     {child:'28', father:'26', mother:'27'},
     {child:'29', father:'3', mother:'4'},
-    {child:'31', father:'30', mother:'29'}
+    {child:'31', father:'30', mother:'29'},
+    {child:'34', father:'5', mother:'33'},
+    {child:'35', father:'36', mother:'37'},
+    {child:'37', father:'38', mother:'39'}
   ]
   
 };
