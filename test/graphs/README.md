@@ -5,9 +5,6 @@ Mock family trees (graphs) used during testing.
 ```javascript
 {
   
-  // Tell us who the base person is
-  baseid: 1,
-  
   // ID is required. Name is useful for display and our own sanity
   persons: [
     {id:1, name:'base person'},
