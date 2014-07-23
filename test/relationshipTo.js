@@ -43,6 +43,20 @@ describe('relationshipTo', function(){
     expect(str).to.equal('sibling');
   });
   
+  it('spouse\'s parents', function(){
+    var str = FSTraversal(sdk)._relationshipTo(genPath('spouse', 'mother'));
+    expect(str).to.equal('spouses\'s parent');
+    var str = FSTraversal(sdk)._relationshipTo(genPath('spouse', 'father'));
+    expect(str).to.equal('spouses\'s parent');
+  });
+  
+  it('spouses\'s sibling', function(){
+    var str = FSTraversal(sdk)._relationshipTo(genPath('spouse', 'mother', 'child'));
+    expect(str).to.equal('spouses\'s sibling');
+    var str = FSTraversal(sdk)._relationshipTo(genPath('spouse', 'father', 'child'));
+    expect(str).to.equal('spouses\'s sibling');
+  });
+  
   it('grandchild', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('child', 'child'));
     expect(str).to.equal('grandchild');
@@ -98,9 +112,9 @@ describe('relationshipTo', function(){
  * Generate relationship paths in the syntax fs-traversal expects
  */
 function genPath(){
-  var path = ['1'];
+  var path = [{rel:'start',person_id:'1'}];
   for(var i = 0; i < arguments.length; i++){
-    path.push(arguments[i], '1');
+    path.push({rel:arguments[i], person_id:'1'});
   }
   return path;
 };
