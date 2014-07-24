@@ -10,100 +10,100 @@ describe('relationshipTo', function(){
     expect(str).to.equal('yourself');
   });
   
-  it('parent', function(){    
+  it('father', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('father'));
-    expect(str).to.equal('parent');
+    expect(str).to.equal('father');
   });
   
-  it('child', function(){    
+  it('son', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('child'));
-    expect(str).to.equal('child');
+    expect(str).to.equal('son');
   });
   
-  it('spouse', function(){    
+  it('husband', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('spouse'));
-    expect(str).to.equal('spouse');
+    expect(str).to.equal('husband');
   });
   
-  it('grandparent', function(){    
+  it('grandparents', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father'));
-    expect(str).to.equal('grandparent');
+    expect(str).to.equal('grandfather');
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'mother'));
-    expect(str).to.equal('grandparent');
+    expect(str).to.equal('grandmother');
     var str = FSTraversal(sdk)._relationshipTo(genPath('mother', 'father'));
-    expect(str).to.equal('grandparent');
+    expect(str).to.equal('grandfather');
     var str = FSTraversal(sdk)._relationshipTo(genPath('mother', 'mother'));
-    expect(str).to.equal('grandparent');
+    expect(str).to.equal('grandmother');
   });
   
-  it('sibling', function(){    
+  it('brother', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'child'));
-    expect(str).to.equal('sibling');
+    expect(str).to.equal('brother');
     var str = FSTraversal(sdk)._relationshipTo(genPath('mother', 'child'));
-    expect(str).to.equal('sibling');
+    expect(str).to.equal('brother');
   });
   
-  it('spouse\'s parents', function(){
+  it('husband\'s parents', function(){
     var str = FSTraversal(sdk)._relationshipTo(genPath('spouse', 'mother'));
-    expect(str).to.equal('spouses\'s parent');
+    expect(str).to.equal('mother-in-law');
     var str = FSTraversal(sdk)._relationshipTo(genPath('spouse', 'father'));
-    expect(str).to.equal('spouses\'s parent');
+    expect(str).to.equal('father-in-law');
   });
   
   it('spouses\'s sibling', function(){
     var str = FSTraversal(sdk)._relationshipTo(genPath('spouse', 'mother', 'child'));
-    expect(str).to.equal('spouses\'s sibling');
+    expect(str).to.equal('brother-in-law');
     var str = FSTraversal(sdk)._relationshipTo(genPath('spouse', 'father', 'child'));
-    expect(str).to.equal('spouses\'s sibling');
+    expect(str).to.equal('brother-in-law');
   });
   
-  it('grandchild', function(){    
+  it('grandson', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('child', 'child'));
-    expect(str).to.equal('grandchild');
+    expect(str).to.equal('grandson');
   });
   
   it('great-grandparent', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father'));
-    expect(str).to.equal('great-grandparent');
+    expect(str).to.equal('great-grandfather');
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'mother'));
-    expect(str).to.equal('great-grandparent');
+    expect(str).to.equal('great-grandmother');
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'mother', 'father'));
-    expect(str).to.equal('great-grandparent');
+    expect(str).to.equal('great-grandfather');
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'mother', 'mother'));
-    expect(str).to.equal('great-grandparent');
+    expect(str).to.equal('great-grandmother');
     var str = FSTraversal(sdk)._relationshipTo(genPath('mother', 'father', 'father'));
-    expect(str).to.equal('great-grandparent');
+    expect(str).to.equal('great-grandfather');
     var str = FSTraversal(sdk)._relationshipTo(genPath('mother', 'father', 'mother'));
-    expect(str).to.equal('great-grandparent');
+    expect(str).to.equal('great-grandmother');
     var str = FSTraversal(sdk)._relationshipTo(genPath('mother', 'mother', 'father'));
-    expect(str).to.equal('great-grandparent');
+    expect(str).to.equal('great-grandfather');
     var str = FSTraversal(sdk)._relationshipTo(genPath('mother', 'mother', 'mother'));
-    expect(str).to.equal('great-grandparent');
+    expect(str).to.equal('great-grandmother');
   });
   
-  it('great-grandchild', function(){    
+  it('great-grandson', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('child', 'child', 'child'));
-    expect(str).to.equal('great-grandchild');
+    expect(str).to.equal('great-grandson');
   });
 
   it('great uncle\'s child', function(){
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father', 'child', 'child')); 
-    expect(str).to.equal('great-uncle\'s child');
+    expect(str).to.equal('great-uncle\'s son');
   });
   
-  it('2nd great-grandparent', function(){    
+  it('2nd great-grandfather', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father','father'));
-    expect(str).to.equal('2nd great-grandparent');
+    expect(str).to.equal('2nd great-grandfather');
   });
 
-  it('3rd great-grandparent', function(){    
+  it('3rd great-grandfather', function(){    
     var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father','father', 'father'));
-    expect(str).to.equal('3rd great-grandparent');
+    expect(str).to.equal('3rd great-grandfather');
   });
 
-  it('4th great-grandparent', function(){    
-    var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father','father', 'father', 'father'));
-    expect(str).to.equal('4th great-grandparent');
+  it('4th great-grandmother', function(){    
+    var str = FSTraversal(sdk)._relationshipTo(genPath('father', 'father', 'father','mother', 'father', 'mother'));
+    expect(str).to.equal('4th great-grandmother');
   });
 
 });
@@ -112,9 +112,16 @@ describe('relationshipTo', function(){
  * Generate relationship paths in the syntax fs-traversal expects
  */
 function genPath(){
-  var path = [{rel:'start',person_id:'1'}];
+  var path = [{rel:'start',person:genPerson()}];
   for(var i = 0; i < arguments.length; i++){
-    path.push({rel:arguments[i], person_id:'1'});
+    path.push({rel:arguments[i], person:genPerson()});
   }
   return path;
+};
+function genPerson(){
+  return {
+    gender: {
+      type: 'http://gedcomx.org/Male'
+    }
+  }
 };
