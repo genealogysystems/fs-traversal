@@ -50,7 +50,7 @@ describe('traversal - descendancy', function(){
       .done(function(){
         expect(visitedPersons).to.have.length(2);
         expect(childCount).to.equal(0);
-        expect(parentCount).to.equal(0);
+        expect(parentCount).to.equal(1);
         done();
       });
   });
