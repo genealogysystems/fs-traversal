@@ -48,9 +48,9 @@ describe('traversal - descendancy', function(){
       })
       .traverse('1')
       .done(function(){
-        expect(visitedPersons).to.have.length(5);
-        expect(childCount).to.equal(2);
-        expect(parentCount).to.equal(4);
+        expect(visitedPersons).to.have.length(2);
+        expect(childCount).to.equal(0);
+        expect(parentCount).to.equal(0);
         done();
       });
   });

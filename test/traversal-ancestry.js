@@ -48,9 +48,9 @@ describe('traversal - ancestry', function(){
       })
       .traverse('1')
       .done(function(){
-        expect(visitedPersons).to.have.length(5);
-        expect(childCount).to.equal(2);
-        expect(parentCount).to.equal(4);
+        expect(visitedPersons).to.have.length(3);
+        expect(childCount).to.equal(1);
+        expect(parentCount).to.equal(2);
         done();
       });
   });

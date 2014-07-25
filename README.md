@@ -98,7 +98,7 @@ function parentsOnly(personId, relationships) {
 
   // Only follow parent relationships
   for(var x in relationships) {
-    if(relationships[x].type == 'mother' || relationships[x].type == 'father') {
+    if(relationships[x].rel == 'mother' || relationships[x].rel == 'father') {
       follow[x] = relationships[x]; 
     }
   }
@@ -116,7 +116,7 @@ traversal.filter(parentsOnly)...
 
     ````javascript
     {
-      type: 'child', // One of child, mother, father, or marriage.
+      rel: 'child', // One of child, mother, father, or marriage.
       depth: 2, // The generational distance we are from the root person. Parent is depth+1, child is depth-1 
       distance: 4, // The total number of hops we are away from the rootperson.
       wrd: {
@@ -126,7 +126,7 @@ traversal.filter(parentsOnly)...
         up: true
       },
       path: [] // An array representing the path to this person from the root person.
-               // [id, 'father', id, 'spouse', ...]
+               // [{rel: 'start', person_id: personId}, {rel: 'father', person_id: personId}, ...]
     }
     ````
 
@@ -332,9 +332,9 @@ Get an array representing the path to a person that has been visited.
 ```javascript
 var path = traversal.pathTo(id);
 console.log(path);
-// [ Person, 'father', Person, 'mother', Person, ... ]
+// [{rel: 'start', person: Person}, {rel: 'father', person: Person}, ... ]
 ``` 
 
 * All person objects are an instance of [FamilySearch.Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * The first person in the array is the start person for the traversal.
-* Possible values for the relationships strings are `child`, `father`, `mother`, `spouse`.
+* Possible values for the relationships strings are `start`, `child`, `father`, `mother`, `spouse`.
