@@ -34,7 +34,7 @@ var traversal = FSTraversal(sdk)
       // Print results
       .done(function(){
         for(var i = 0; i < relationships.length; i++){
-          console.log('%s\t%d', relationships[i].name, relationships[i].weight);
+          console.log('%s,%d', relationships[i].name, relationships[i].weight);
         }
       })
       

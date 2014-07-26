@@ -9,7 +9,7 @@ module.exports = {
     {id:'6', name:'grandfather'},
     {id:'7', name:'grandmother'},
     {id:'8', name:'uncle'},
-    {id:'9', name:'aunt'},
+    {id:'9', name:'uncle\'s wife'},
     {id:'10', name:'cousin'},
     {id:'11', name:'cousin\'s wife'},
     {id:'12', name:'cousin\'s child'},
