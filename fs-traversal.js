@@ -62,14 +62,25 @@ module.exports = function(sdk) {
      * Expose functions to change options
      */
     order: function(type) {
-      if(type != 'wrd' && type != 'distance' && type != 'ancestry' && type != 'descendancy') {
+      var orders = ['wrd','distance','ancestry','descendancy','wrd-far'];
+      if(orders.indexOf(type) === -1) {
         throw new Error('invalid order');
       }
+      
       // Make sure we haven't or are not currently traversing.
       if(this._status !== 'ready') {
         throw new Error('You may only set the order before starting a traversal');
       }
+      
       this._options.order = type;
+      
+      // If ancestry or descendancy, add a filter
+      if(type === 'ancestry'){
+        this.filter(ancestryFilter);
+      }
+      else if(type === 'descendancy'){
+        this.filter(descendancyFilter);
+      }
 
       return this;
     },
@@ -114,23 +125,21 @@ module.exports = function(sdk) {
     
     /**
      * Takes in a visited person id and returns the path array of format:
-     * [startPerson, 'relationship', person, 'relationship', person, ... ]
+     * [{rel: 'relationship', person: personObject}, ... ]
      */
     pathTo: function(id){
       if(!this._fetched[id] || !this._visited[id]){
         return [];
       }
       
-      var fetchedPath = this._fetched[id].path,
+      var fetchPath = this._fetched[id].path,
           returnPath = [];
-          
-      // Add the start person
-      returnPath.push(this._visited[fetchedPath[0]].getPrimaryPerson());
       
-      // Collect the rest of the people and relationships
-      for(var i = 1; i < fetchedPath.length; i += 2){
-        returnPath.push(fetchedPath[i]);
-        returnPath.push(this._visited[fetchedPath[i+1]].getPrimaryPerson());
+      for(var i = 0; i < fetchPath.length; i++){
+        returnPath.push({
+          rel: fetchPath[i].rel,
+          person: this._visited[fetchPath[i].person_id].getPrimaryPerson()
+        });
       }
       
       return returnPath;
@@ -144,13 +153,16 @@ module.exports = function(sdk) {
         return '';
       }
 
-      var path = this._fetched[id].path;
+      var path = this.pathTo(id);
 
       return this._relationshipTo(path);
     },
 
     /**
-     * Internal function that takes a path and returns a string
+     * Internal function that takes in a path and returns a human-readable string.
+     * The relationship is calculated by first generating a coded string that
+     * represents the path, then examining the string in chunks of decreasing size
+     * to find the most relevant or shortest way to describe the relationship.
      */
     _relationshipTo: function(path) {
 
@@ -158,181 +170,54 @@ module.exports = function(sdk) {
       if(path.length === 1){
         return 'yourself';
       }
-    
-      // Generate switch string
-      var switchStr = '';
-      for(var i = 1; i < path.length; i+=2) {
-        switch(path[i]) {
-          case 'child':
-            switchStr += '↓';
-            break;
-          case 'mother':
-          case 'father':
-            switchStr += '↑';
-            break;
-          case 'spouse':
-            switchStr += '→';
-            break;
-          default:
-            return '';
-        }
-      }
 
-      // Generate relationship
-      var relation = '',
+      var switchStr = generateSwitchString(path),
+          relation = '',
           remainder = '',
-          match = true,
-          done = false,
-          offset = 2, // Starts at the first related person in the path
-          gender,
-          lastPersonOffset;
-
+          done = false;
+          
       while(!done) {
-        match = true;
-        gender = undefined;
-        lastPersonOffset = offset + ((switchStr.length-1)*2);
-        if(this._visited[path[lastPersonOffset]] && this._visited[path[lastPersonOffset]].getPrimaryPerson()) {
-          gender = this._visited[path[lastPersonOffset]].getPrimaryPerson().gender.type;
-        }
-        rel = '';
         
-        // Check for nth grandparent
-        var isGrandparent = true
-            gpArray = switchStr.split(''),
-            pLength = gpArray.length;
+        rel = '';
 
-        if(pLength < 2) {
-          isGrandparent = false;
-        }
-        for(var x in gpArray) {
-          if(gpArray[x] != '↑') {
-            isGrandparent = false;
-          }
-        }
-
-        if(isGrandparent) {
-          if(gender == 'http://gedcomx.org/Male') {
-            rel = 'grandfather';
-          } else if(gender == 'http://gedcomx.org/Female') {
-            rel = 'grandmother';
-          } else {
-            rel = 'grandparent';
-          }
-
-          if(pLength > 2) {
-            rel = 'great-'+rel;
-          }
-
-          if(pLength > 3) {
-            var prefix = '';
-            if(pLength == 4) {
-              prefix = 'nd';
-            } else if(pLength == 5) {
-              prefix = 'rd';
-            } else {
-              prefix = 'th';
+        // Find a match for the current portion of the string, if we can
+        for(var i = 0; i < relConfig.length; i++){
+          var c = relConfig[i];
+          if(c.regex.test(switchStr)){
+            if(_isString(c.rel)){
+              rel = c.rel;
             }
-            rel = (pLength-2)+prefix+' '+rel;
+            else if(_isFunction(c.rel)){
+              rel = c.rel(switchStr);
+            }
+            else {
+              throw new Exception('Expected relConfig.rel to be a string or a function');
+            }
+            break;
           }
-
-        } else {
-
-          switch(switchStr) {
-            case '↑':
-              if(gender == 'http://gedcomx.org/Male') {
-                rel = 'father';
-              } else if(gender == 'http://gedcomx.org/Female') {
-                rel = 'mother';
-              } else {
-                rel = 'parent';
-              }
-              break;
-            case '↓':
-              if(gender == 'http://gedcomx.org/Male') {
-                rel = 'son';
-              } else if(gender == 'http://gedcomx.org/Female') {
-                rel = 'daughter';
-              } else {
-                rel = 'child';
-              }
-              break;
-            case '→':
-              if(gender == 'http://gedcomx.org/Male') {
-                rel = 'husband';
-              } else if(gender == 'http://gedcomx.org/Female') {
-                rel = 'wife';
-              } else {
-                rel = 'spouse';
-              }
-              break;
-            case '↑↓':
-              if(gender == 'http://gedcomx.org/Male') {
-                rel = 'brother';
-              } else if(gender == 'http://gedcomx.org/Female') {
-                rel = 'sister';
-              } else {
-                rel = 'sibling';
-              }
-              break;
-            case '↓↓':
-              if(gender == 'http://gedcomx.org/Male') {
-                rel = 'grandson';
-              } else if(gender == 'http://gedcomx.org/Female') {
-                rel = 'granddaughter';
-              } else {
-                rel = 'grandchild';
-              }
-              break;
-            case '↑↑↓':
-              if(gender == 'http://gedcomx.org/Male') {
-                rel = 'uncle';
-              } else if(gender == 'http://gedcomx.org/Female') {
-                rel = 'aunt';
-              } else {
-                rel = 'parent\'s sibling';
-              }
-              break;
-            case '↓↓↓':
-              if(gender == 'http://gedcomx.org/Male') {
-                rel = 'great-grandson';
-              } else if(gender == 'http://gedcomx.org/Female') {
-                rel = 'great-granddaughter';
-              } else {
-                rel = 'great-grandchild';
-              }
-              break;
-            case '↑↑↓↓':
-              rel = 'cousin';
-              break;
-            case '↑↑↑↓':
-              if(gender == 'http://gedcomx.org/Male') {
-                rel = 'great-uncle';
-              } else if(gender == 'http://gedcomx.org/Female') {
-                rel = 'great-aunt';
-              } else {
-                rel = 'great-uncle';
-              }
-              break;
-            default:
-              match = false;
-          }
-
         }
 
-        if(match) {
+        // If we found a match, update the relationship string
+        // and prepare to examine the remaining portion
+        if(rel) {
           relation += ((relation)?"'s ":'')+rel;
           if(remainder) {
-            offset += (switchStr.length*2);
             switchStr = remainder;
             remainder = '';
           } else {
             done = true;
           }
-        } else {
+        } 
+        
+        // If we didn't find a match, prepare to examine a
+        // smaller portion of the switch string
+        else {
+        
+          // Lengthen the remainder and shorten the switch string
           remainder = switchStr.substr(-1,1)+remainder;
           switchStr = switchStr.substr(0,switchStr.length-1);
 
-          // If we empty the switch string without finding anything, add  relative and be done
+          // If we empty the switch string without finding anything, add "relative" and be done
           if(!switchStr) {
             rel += ((rel)?"'s ":'')+'relative';
             done = true;
@@ -455,7 +340,10 @@ module.exports = function(sdk) {
           m: 0,
           up: false
         },
-        path: [start]
+        path: [{
+          rel: 'start',
+          person_id: start
+        }]
       }
       
       /**
@@ -504,7 +392,7 @@ module.exports = function(sdk) {
       each(person.getChildIds(), function(childId){
         if(!self._fetched[childId]) {
           rels[childId] = {
-            type: 'child',
+            rel: 'child',
             depth: fetched.depth - 1,
             distance: fetched.distance + 1,
             wrd: {
@@ -513,7 +401,8 @@ module.exports = function(sdk) {
               m: fetched.wrd.m,
               up: fetched.wrd.up
             },
-            path: fetched.path.concat(['child', childId])
+            // Use concat to create a copy while appending new data
+            path: fetched.path.concat([{rel: 'child', person_id: childId}])
           };
         }
       })
@@ -521,7 +410,7 @@ module.exports = function(sdk) {
       each(person.getFatherIds(), function(fatherId){
         if(!self._fetched[fatherId]) {
           rels[fatherId] = {
-            type: 'father',
+            rel: 'father',
             depth: fetched.depth + 1,
             distance: fetched.distance + 1,
             wrd: {
@@ -530,7 +419,7 @@ module.exports = function(sdk) {
               m: fetched.wrd.m,
               up: true
             },
-            path: fetched.path.concat(['father', fatherId])
+            path: fetched.path.concat([{rel: 'father', person_id: fatherId}])
           };
         }
       });
@@ -538,7 +427,7 @@ module.exports = function(sdk) {
       each(person.getMotherIds(), function(motherId){
         if(!self._fetched[motherId]) {
           rels[motherId] = {
-            type: 'mother',
+            rel: 'mother',
             depth: fetched.depth + 1,
             distance: fetched.distance + 1,
             wrd: {
@@ -547,7 +436,7 @@ module.exports = function(sdk) {
               m: fetched.wrd.m,
               up: true
             },
-            path: fetched.path.concat(['mother', motherId])
+            path: fetched.path.concat([{rel: 'mother', person_id: motherId}])
           };
         }
       });
@@ -555,7 +444,7 @@ module.exports = function(sdk) {
       each(person.getSpouseIds(), function(spouseId){
         if(!self._fetched[spouseId]) {
           rels[spouseId] = {
-            type: 'marriage',
+            rel: 'marriage',
             depth: fetched.depth,
             distance: fetched.distance + 1,
             wrd: {
@@ -564,7 +453,7 @@ module.exports = function(sdk) {
               m: fetched.wrd.m + 1,
               up: fetched.wrd.up
             },
-            path: fetched.path.concat(['spouse', spouseId])
+            path: fetched.path.concat([{rel: 'spouse', person_id: spouseId}])
           };
         }
       });
@@ -711,26 +600,55 @@ module.exports = function(sdk) {
                 (fatherId)?self._visited[fatherId].getPrimaryPerson():undefined, 
                 childParent);
             });
-          });
-
-          // Call the parent callback with mother if mother is defined
-          if(motherId) {
-            each(self._callbacks.parent, function(cb){
-              setTimeout(function() {
-                cb.call(self, self._visited[motherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
-              });
-            });
-          }
-
-          // Call the parent callback with father
-          if(fatherId) {
-            each(self._callbacks.parent, function(cb){
-              setTimeout(function() {
-                cb.call(self, self._visited[fatherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
-              });
-            });
-          }
+          }); 
         }
+
+        /*
+          Call the parent callback with mother if:
+             mother exists and has been visited
+             and
+             (
+              father exists and has been visited
+              or
+              father exists and but hasn't been fetched // we won't be visiting the father if he doesn't have a fetch obj by now
+              or
+              father does not exist
+             )
+        */
+        if(self._visited[childId] && motherId && self._visited[motherId] &&
+          ((fatherId && self._visited[fatherId]) ||
+            (fatherId && !self._fetched[fatherId]) ||
+            !fatherId)) {        
+          each(self._callbacks.parent, function(cb){
+            setTimeout(function() {
+              cb.call(self, self._visited[motherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
+            });
+          });
+        }
+
+        /*
+          Call the parent callback with father if:
+             father exists and has been visited
+             and
+             (
+              mother exists and has been visited
+              or
+              mother exists and but hasn't been fetched // we won't be visiting the mother if she doesn't have a fetch obj by now
+              or
+              mother does not exist
+             )
+        */
+        if(self._visited[childId] && fatherId && self._visited[fatherId] &&
+          ((motherId && self._visited[motherId]) ||
+            (motherId && !self._fetched[motherId]) ||
+            !motherId)) {
+          each(self._callbacks.parent, function(cb){
+            setTimeout(function() {
+              cb.call(self, self._visited[fatherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
+            });
+          });
+        }
+
       });
 
       // For the person and each parent, see if all of their children have been visited.
@@ -793,7 +711,7 @@ module.exports = function(sdk) {
       each(relationshipsCheck, function(relation) {
         if(self._visited[relation]) {
           var allVisited = true,
-              related = [];
+              related = {};
           
           // Check the persons parents
           var parentIds = _unique(self._visited[relation].getFatherIds().concat(self._visited[relation].getMotherIds()))
@@ -801,7 +719,7 @@ module.exports = function(sdk) {
             if(!self._visited[parentId]) {
               allVisited = false;
             } else {
-              related.push(self._visited[parentId].getPrimaryPerson());
+              related[parentId] = self._visited[parentId].getPrimaryPerson();
             }
           });
 
@@ -811,7 +729,7 @@ module.exports = function(sdk) {
             if(!self._visited[childId]) {
               allVisited = false;
             } else {
-              related.push(self._visited[childId].getPrimaryPerson());
+              related[childId] = self._visited[childId].getPrimaryPerson();
             }
           });
 
@@ -821,7 +739,7 @@ module.exports = function(sdk) {
             if(!self._visited[spouseId]) {
               allVisited = false;
             } else {
-              related.push(self._visited[spouseId].getPrimaryPerson());
+              related[spouseId] = self._visited[spouseId].getPrimaryPerson();
             }
           });
 
@@ -850,20 +768,296 @@ module.exports = function(sdk) {
               G = ((wrd.g >= 0)?this._options.wrdFactors.gPositive:this._options.wrdFactors.gNegative)*(Math.abs(wrd.g)+1),
               C = Math.pow(Math.E, (this._options.wrdFactors.c*wrd.c)),
               M = Math.pow(Math.E, (this._options.wrdFactors.m*wrd.m));
-
           return G*C*M;
         case 'ancestry':
-          return fetchObj.depth * -1;
-        case 'descendancy':
           return fetchObj.depth;
+        case 'descendancy':
+          return fetchObj.depth * -1;
         case 'distance':
           return fetchObj.distance;
+        case 'wrd-far':
+          return calcWRDFAR(fetchObj);
         default:
           return 0;
       }
     }
 
   }
+};
+
+/**
+ * Experimental FAR version of WRD
+ */
+function calcWRDFAR(fetchObj){
+  
+  // Short circuit on all relationships of distance one
+  // Helps us deal with siblings in a better way
+  if(fetchObj.distance === 1){
+    return 1;
+  }
+  
+  var path = fetchObj.path,
+      d = fetchObj.distance,
+      s = 0, // Number of sibling relationships
+      c = 0, // Number of collateral line changes
+      dc = 0; // Distance travelled since entering first collateral line
+      
+  for(var i = 0; i < fetchObj.path.length; i++){
+    if(c){
+      dc++;
+    }
+    if(path[i].rel === 'spouse'){
+      c++;
+    }
+    else if(i > 0) {
+      var currentChild = _isChildRel(path[i].rel),
+          currentParent = _isParentRel(path[i].rel),
+          prevChild = _isChildRel(path[i-1].rel),
+          prevParent = _isParentRel(path[i-1].rel);
+      if((currentChild && prevParent) || (currentParent && prevChild)){
+        c++;
+        s += .5;
+      }
+    }
+  }
+  
+  var w = (d - s) * Math.pow(Math.E, c * 1.4) * Math.pow(Math.E, (dc - s) * 1.5);
+  
+  return w;
+};
+function _isParentRel(rel){
+  return rel === 'mother' || rel === 'father';
+};
+function _isChildRel(rel){
+  return rel === 'child';
+};
+
+var relConfig = [
+  {
+    pattern: 'f',
+    rel: 'father'
+  },
+  {
+    pattern: 'm',
+    rel: 'mother'
+  },
+  {
+    pattern: 's',
+    rel: 'son'
+  },
+  {
+    pattern: 'd',
+    rel: 'daughter'
+  },
+  {
+    pattern: 'c',
+    rel: 'child'
+  },
+  {
+    pattern: 'h',
+    rel: 'husband'
+  },
+  {
+    pattern: 'w',
+    rel: 'wife'
+  },
+  {
+    pattern: '(m|f)s',
+    rel: 'brother'
+  },
+  {
+    pattern: '(m|f)d',
+    rel: 'sister'
+  },
+  {
+    pattern: '(m|f)f',
+    rel: 'grandfather'
+  },
+  {
+    pattern: '(m|f)m',
+    rel: 'grandmother'
+  },
+  {
+    pattern: '(m|f){2}f',
+    rel: 'great-grandfather'
+  },
+  {
+    pattern: '(m|f){2}m',
+    rel: 'great-grandmother'
+  },
+  {
+    pattern: '(m|f){4,}',
+    rel: function(str){
+      var suffix = str.substr(-1,1) === 'f' ? 'father' : 'mother',
+          prefix = '',
+          length = str.length;
+      if(length == 4) {
+        prefix = 'nd';
+      } else if(length == 5) {
+        prefix = 'rd';
+      } else {
+        prefix = 'th';
+      }
+      return (length-2)+prefix+' great-grand'+suffix;
+    }
+  },
+  {
+    pattern: '(s|d)s',
+    rel: 'grandson'
+  },
+  {
+    pattern: '(s|d)d',
+    rel: 'granddaughter'
+  },
+  {
+    pattern: '(s|d)c',
+    rel: 'grandchild'
+  },
+  {
+    pattern: '(h|w)f',
+    rel: 'father-in-law'
+  },
+  {
+    pattern: '(h|w)m',
+    rel: 'mother-in-law'
+  },
+  {
+    pattern: '(h|w)(m|f)s',
+    rel: 'brother-in-law'
+  },
+  {
+    pattern: '(h|w)(m|f)d',
+    rel: 'sister-in-law'
+  },
+  {
+    pattern: '(h|w)(m|f)c',
+    rel: 'spouse\'s sibling'
+  },
+  {
+    pattern: '(m|f){2}s',
+    rel: 'uncle'
+  },
+  {
+    pattern: '(m|f){2}d',
+    rel: 'aunt'
+  },
+  {
+    pattern: '(m|f){2}c',
+    rel: 'parent\'s sibling'
+  },
+  {
+    pattern: '(d|s){2}s',
+    rel: 'great-grandson'
+  },
+  {
+    pattern: '(d|s){2}d',
+    rel: 'great-granddaughter'
+  },
+  {
+    pattern: '(d|s){2}d',
+    rel: 'great-grandchild'
+  },
+  {
+    pattern: '(m|f){2}(d|s|c){2}',
+    rel: 'cousin'
+  },
+  {
+    pattern: '(m|f){3}s',
+    rel: 'great-uncle'
+  },
+  {
+    pattern: '(m|f){3}d',
+    rel: 'great-aunt'
+  }
+];
+
+// Create regex objects for relConfig. This is done
+// so that we don't need to generate correct regex
+// objects in the patterns with leading ^ and
+// trailing $. This wouldn't be useful if we allowed
+// regex to only examine portions of a rel string
+// but we don't allow that.
+each(relConfig, function(c){
+  c.regex = new RegExp('^' + c.pattern + '$');
+});
+
+function isMale(gender){
+  return gender === 'http://gedcomx.org/Male';
+};
+
+function isFemale(gender){
+  return gender === 'http://gedcomx.org/Female';
+};
+
+/**
+ * Generate a coded string representing the relationship path
+ */
+function generateSwitchString(path){
+  var switchStr = '';
+  for(var i = 1; i < path.length; i++) {
+    switch(path[i].rel) {
+      case 'child':
+        switch(path[i].person.gender.type){
+          case 'http://gedcomx.org/Male':
+            switchStr += 's';
+            break;
+          case 'http://gedcomx.org/Female':
+            switchStr += 'd';
+            break;
+          default:
+            switchStr += 'c';
+            break;
+        }
+        break;
+      case 'mother':
+        switchStr += 'm';
+        break;
+      case 'father':
+        switchStr += 'f';
+        break;
+      case 'spouse':
+        switch(path[i].person.gender.type){
+          case 'http://gedcomx.org/Male':
+            switchStr += 'h';
+            break;
+          case 'http://gedcomx.org/Female':
+            switchStr += 'w';
+            break;
+        }
+        break;
+      default:
+        return '';
+    }
+  }
+  return switchStr;
+};
+
+/**
+ * Filter function used by the ancestry traversal
+ */
+function ancestryFilter(personId, relationships){
+  var persons = {};
+  for(var id in relationships){
+    var rel = relationships[id];
+    if(rel.depth == rel.distance){
+      persons[id] = rel;
+    }
+  }
+  return persons;
+};
+
+/**
+ * Filter function used by the descendancy traversal
+ */
+function descendancyFilter(personId, relationships){
+  var persons = {};
+  for(var id in relationships){
+    var rel = relationships[id];
+    if(-rel.depth == rel.distance){
+      persons[id] = rel;
+    }
+  }
+  return persons;
 };
 
 /**
@@ -906,6 +1100,13 @@ function _unique(array) {
   return results;
 };
 
+function _isString(obj){
+  return toString.call(obj) === '[object String]';
+};
+
+function _isFunction(obj){
+  return toString.call(obj) === '[object Function]' || typeof obj === 'function';
+};
 },{"async":2}],2:[function(_dereq_,module,exports){
 (function (process){
 /*!
