@@ -1101,11 +1101,11 @@ function _unique(array) {
 };
 
 function _isString(obj){
-  return toString.call(obj) === '[object String]';
+  return Object.prototype.toString.call(obj) === '[object String]';
 };
 
 function _isFunction(obj){
-  return toString.call(obj) === '[object Function]' || typeof obj === 'function';
+  return Object.prototype.toString.call(obj) === '[object Function]' || typeof obj === 'function';
 };
 },{"async":2}],2:[function(_dereq_,module,exports){
 (function (process){
