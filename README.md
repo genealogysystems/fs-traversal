@@ -50,10 +50,11 @@ Sets the order of the traversal. Order processed is lowest to highest. Defaults 
 
 Possible values are:
 
-* `ancestry` - Will travel parent links first, then marriage, then children.
-* `descendancy` - Will travel children links first, then marriage, then parents.
+* `ancestry` - Will only visit ancestors in order by generation.
+* `descendancy` - Will only visit descendants in order by generation.
 * `distance` - Every relationship followed increases the distance by one, regardless of direction.
-* `wrd` - Uses [Weighted Relationship distance](http://fht.byu.edu/prev_workshops/workshop13/papers/baker-beyond-fhtw2013.pdf).
+* `wrd` - Uses [Weighted Relationship Distance](http://fht.byu.edu/prev_workshops/workshop13/papers/baker-beyond-fhtw2013.pdf).
+* `wrd-far` - Alternative to WRD that addresses some issues. See [issue #17](https://github.com/genealogysystems/fs-traversal/issues/17) for details.
 
 ````javascript
 traversal.order('distance')...
