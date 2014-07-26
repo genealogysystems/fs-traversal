@@ -8,14 +8,6 @@ describe('traversal - ancestry', function(){
   
   it('simple', function(done){
     
-    var weights = {
-      1: 0,
-      2: 0,
-      3: -1,
-      4: -1,
-      5: 1
-    };
-    
     var visitedPersons = [],
         marriageCount = 0,
         childCount = 0,
@@ -25,7 +17,6 @@ describe('traversal - ancestry', function(){
       .order('ancestry')
       .person(function(person){
         visitedPersons.push(person);
-        expect(this._calcWeight(this._fetched[person.id])).to.equal(weights[person.id]);
       })
       .marriage(function(wife, husband, marriage){
         expect(visitedPersons).to.deep.include.members([wife]);
