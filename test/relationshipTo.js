@@ -81,6 +81,15 @@ describe('relationshipTo', function(){
     testRel('great-grandson', ['daughter', 'daughter', 'son']);
   });
   
+  it('nth great grandchildren', function(){
+    testRel('2nd great-granddaughter', ['daughter','son','daughter','daughter']);
+    testRel('2nd great-grandson', ['daughter','son','daughter','son']);
+    testRel('2nd great-grandchild', ['daughter','son','daughter','child']);
+    testRel('3rd great-grandson', ['son','daughter','child','daughter','son']);
+    testRel('4th great-granddaughter', ['son','daughter','child','daughter','son','daughter']);
+    testRel('11th great-grandchild', ['daughter','child','daughter','son','daughter','son','daughter','child','son','daughter','son','daughter','child']);
+  });
+  
   it('spouse\'s parents', function(){
     testRel('mother-in-law', ['husband', 'mother']);
     testRel('mother-in-law', ['wife', 'mother']);
@@ -176,7 +185,7 @@ describe('relationshipTo', function(){
 });
 
 function testRel(rel, path){
-  expect(rel).to.equal(relFromPath(path));
+  expect(relFromPath(path)).to.equal(rel);
 };
 
 /**
