@@ -52,6 +52,7 @@ Possible values are:
 
 * `ancestry` - Will only visit ancestors in order by generation.
 * `descendancy` - Will only visit descendants in order by generation.
+* `ancestry-descendancy` - Only visit direct ancestors and descendants.
 * `distance` - Every relationship followed increases the distance by one, regardless of direction.
 * `wrd` - Uses [Weighted Relationship Distance](http://fht.byu.edu/prev_workshops/workshop13/papers/baker-beyond-fhtw2013.pdf).
 * `wrd-far` - Alternative to WRD that addresses some issues. See [issue #17](https://github.com/genealogysystems/fs-traversal/issues/17) for details.
@@ -277,13 +278,17 @@ Will immediately pause the traversal. Note that outstanding API requests will be
 traversal.pause();
 ````
 
-
 ### .resume()
 Resume a paused traversal.
 ````javascript
 traversal.resume();
 ````
 
+### .stop()
+Stop traversal. Cannot be restarted. Use `pause()` if you expect to resume.
+````javascript
+traversal.stop();
+````
 
 ### .error(function)
 Called on Error.

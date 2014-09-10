@@ -251,6 +251,16 @@ module.exports = function(sdk) {
         this._status = 'running';
       }
     },
+    
+    /**
+     * End traversal immediately
+     */
+    stop: function(){
+      if(this._queue){
+        this._status = 'stopped';
+        this._queue.kill();
+      }
+    },
 
     /**
      * All of our registered callbacks.
@@ -385,6 +395,11 @@ module.exports = function(sdk) {
     },
 
     _processPerson: function(person) {
+      
+      if(this._status === 'stopped'){
+        return;
+      }
+      
       var self = this,
           id = person.getPrimaryId(),
           fetched = this._fetched[id],
@@ -447,7 +462,7 @@ module.exports = function(sdk) {
       each(person.getSpouseIds(), function(spouseId){
         if(!self._fetched[spouseId]) {
           rels[spouseId] = {
-            rel: 'marriage',
+            rel: 'spouse',
             depth: fetched.depth,
             distance: fetched.distance + 1,
             wrd: {
