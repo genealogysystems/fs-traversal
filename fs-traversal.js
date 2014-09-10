@@ -62,7 +62,7 @@ module.exports = function(sdk) {
      * Expose functions to change options
      */
     order: function(type) {
-      var orders = ['wrd','distance','ancestry','descendancy','wrd-far'];
+      var orders = ['wrd','distance','ancestry','descendancy','ancestry-descendancy','wrd-far'];
       if(orders.indexOf(type) === -1) {
         throw new Error('invalid order');
       }
@@ -80,6 +80,9 @@ module.exports = function(sdk) {
       }
       else if(type === 'descendancy'){
         this.filter(descendancyFilter);
+      }
+      else if(type === 'ancestry-descendancy'){
+        this.filter(ancestryDescendancyFilter);
       }
 
       return this;
@@ -175,7 +178,7 @@ module.exports = function(sdk) {
           relation = '',
           remainder = '',
           done = false;
-          
+      
       while(!done) {
         
         rel = '';
@@ -773,6 +776,7 @@ module.exports = function(sdk) {
           return fetchObj.depth;
         case 'descendancy':
           return fetchObj.depth * -1;
+        case 'ancestry-descendancy':
         case 'distance':
           return fetchObj.distance;
         case 'wrd-far':
@@ -802,14 +806,14 @@ function calcWRDFAR(fetchObj){
       c = 0, // Number of collateral line changes
       dc = 0; // Distance travelled since entering first collateral line
       
-  for(var i = 0; i < fetchObj.path.length; i++){
+  for(var i = 1; i < fetchObj.path.length; i++){
     if(c){
       dc++;
     }
     if(path[i].rel === 'spouse'){
       c++;
     }
-    else if(i > 0) {
+    else {
       var currentChild = _isChildRel(path[i].rel),
           currentParent = _isParentRel(path[i].rel),
           prevChild = _isChildRel(path[i-1].rel),
@@ -870,6 +874,10 @@ var relConfig = [
     rel: 'sister'
   },
   {
+    pattern: '(m|f)c',
+    rel: 'sibling'
+  },
+  {
     pattern: '(m|f)f',
     rel: 'grandfather'
   },
@@ -885,6 +893,7 @@ var relConfig = [
     pattern: '(m|f){2}m',
     rel: 'great-grandmother'
   },
+  // nth great grandparent
   {
     pattern: '(m|f){4,}',
     rel: function(str){
@@ -902,16 +911,51 @@ var relConfig = [
     }
   },
   {
-    pattern: '(s|d)s',
+    pattern: '(s|d|c)s',
     rel: 'grandson'
   },
   {
-    pattern: '(s|d)d',
+    pattern: '(s|d|c)d',
     rel: 'granddaughter'
   },
   {
-    pattern: '(s|d)c',
+    pattern: '(s|d|c)c',
     rel: 'grandchild'
+  },
+  {
+    pattern: '(s|d|c){2}s',
+    rel: 'great-grandson'
+  },
+  {
+    pattern: '(s|d|c){2}d',
+    rel: 'great-granddaughter'
+  },
+  {
+    pattern: '(s|d|c){2}d',
+    rel: 'great-grandchild'
+  },
+  // nth great grandchild
+  {
+    pattern: '(s|d|c){4,}',
+    rel: function(str){
+      var lastChar = str.substr(-1,1),
+          suffix = 'child',
+          prefix = '',
+          length = str.length;
+      if(lastChar === 's'){
+        suffix = 'son';
+      } else if(lastChar === 'd'){
+        suffix = 'daughter';
+      }
+      if(length == 4) {
+        prefix = 'nd';
+      } else if(length == 5) {
+        prefix = 'rd';
+      } else {
+        prefix = 'th';
+      }
+      return (length-2)+prefix+' great-grand'+suffix;
+    }
   },
   {
     pattern: '(h|w)f',
@@ -921,12 +965,22 @@ var relConfig = [
     pattern: '(h|w)m',
     rel: 'mother-in-law'
   },
+  // Spouse's siblings
   {
     pattern: '(h|w)(m|f)s',
     rel: 'brother-in-law'
   },
   {
     pattern: '(h|w)(m|f)d',
+    rel: 'sister-in-law'
+  },
+  // Sibling's spouses
+  {
+    pattern: '(m|f)dh',
+    rel: 'brother-in-law'
+  },
+  {
+    pattern: '(m|f)sw',
     rel: 'sister-in-law'
   },
   {
@@ -946,18 +1000,6 @@ var relConfig = [
     rel: 'parent\'s sibling'
   },
   {
-    pattern: '(d|s){2}s',
-    rel: 'great-grandson'
-  },
-  {
-    pattern: '(d|s){2}d',
-    rel: 'great-granddaughter'
-  },
-  {
-    pattern: '(d|s){2}d',
-    rel: 'great-grandchild'
-  },
-  {
     pattern: '(m|f){2}(d|s|c){2}',
     rel: 'cousin'
   },
@@ -968,6 +1010,22 @@ var relConfig = [
   {
     pattern: '(m|f){3}d',
     rel: 'great-aunt'
+  },
+  {
+    pattern: 'dh',
+    rel: 'son-in-law'
+  },
+  {
+    pattern: 'sw',
+    rel: 'daughter-in-law'
+  },
+  {
+    pattern: '(m|f)(d|s|c)d',
+    rel: 'niece'
+  },
+  {
+    pattern: '(m|f)(d|s|c)s',
+    rel: 'nephew'
   }
 ];
 
@@ -1023,6 +1081,8 @@ function generateSwitchString(path){
           case 'http://gedcomx.org/Female':
             switchStr += 'w';
             break;
+          default:
+            return '';
         }
         break;
       default:
@@ -1039,7 +1099,7 @@ function ancestryFilter(personId, relationships){
   var persons = {};
   for(var id in relationships){
     var rel = relationships[id];
-    if(rel.depth == rel.distance){
+    if(isAncestor(rel)){
       persons[id] = rel;
     }
   }
@@ -1053,11 +1113,39 @@ function descendancyFilter(personId, relationships){
   var persons = {};
   for(var id in relationships){
     var rel = relationships[id];
-    if(-rel.depth == rel.distance){
+    if(isDescendant(rel)){
       persons[id] = rel;
     }
   }
   return persons;
+};
+
+/**
+ * Filter function used by the ancestry-descendancy traversal
+ */
+function ancestryDescendancyFilter(personId, relationships){
+  var persons = {};
+  for(var id in relationships){
+    var rel = relationships[id];
+    if(isAncestor(rel) || isDescendant(rel)){
+      persons[id] = rel;
+    }
+  }
+  return persons;
+};
+
+/**
+ * Returns true of the relationship represents a direct ancestor
+ */
+function isAncestor(relationship){
+  return relationship.depth == relationship.distance;
+};
+
+/**
+ * Returns true if the relationship represents a direct descendant
+ */
+function isDescendant(relationship){
+  return -relationship.depth == relationship.distance
 };
 
 /**
