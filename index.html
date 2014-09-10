@@ -96,6 +96,7 @@
           var scriptId = 'examples/'+$(this).data('example')+'.js';
           $.get( scriptId, function( data ) {
             editor.getSession().getDocument().setValue(data);
+            editor.moveCursorTo(1,1);
           }, 'text');
         }).first().click();
 
