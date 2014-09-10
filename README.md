@@ -117,7 +117,7 @@ traversal.filter(parentsOnly)...
 
     ````javascript
     {
-      rel: 'child', // One of child, mother, father, or marriage.
+      rel: 'child', // One of child, mother, father, or spouse.
       depth: 2, // The generational distance we are from the root person. Parent is depth+1, child is depth-1 
       distance: 4, // The total number of hops we are away from the rootperson.
       wrd: {
