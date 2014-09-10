@@ -7,8 +7,10 @@ FSTraversal(FamilySearch)
     var persons = {};
     for(var id in relationships){
       var rel = relationships[id];
-      if(isAncestor(rel) || isDescendant(rel) || isCousin(rel)){
+      if(isAncestorDescendantOrCousin(rel)){
         persons[id] = rel;
+      } else {
+        console.log('ignoring ' + rel.path[rel.path.length-1].person_id)
       }
     }
     return persons;
