@@ -307,6 +307,10 @@ module.exports = function(sdk) {
     status: function() {
       return this._status;
     },
+    
+    _isStopped: function() {
+      return this._status === 'stopped';
+    },
 
     /**
      * Traversal function returns a new object with new state.
@@ -385,6 +389,9 @@ module.exports = function(sdk) {
       self._queue.drain = function(){
         self._status = 'done';
         each(self._callbacks.done, function(cb){
+          if(self._isStopped()){
+            return;
+          }
           setTimeout(function(){ 
             cb.call(self); 
           });
@@ -519,6 +526,9 @@ module.exports = function(sdk) {
       self._visited[id] = person;
       each(self._callbacks.person, function(cb) {
         setTimeout(function() {
+          if(self._isStopped()){
+            return;
+          }
           cb.call(self, self._visited[id].getPrimaryPerson());
         });
       });
@@ -545,6 +555,9 @@ module.exports = function(sdk) {
         if(self._visited[husbandId] && self._visited[wifeId]) {
           each(self._callbacks.marriage, function(cb){
             setTimeout(function() {
+              if(self._isStopped()){
+                return;
+              }
               cb.call(self, self._visited[wifeId].getPrimaryPerson(), self._visited[husbandId].getPrimaryPerson(), marriage);
             });
           })
@@ -571,6 +584,9 @@ module.exports = function(sdk) {
           if(allVisited) {
             each(self._callbacks.spouses, function(cb){
               setTimeout(function() {
+                if(self._isStopped()){
+                  return;
+                }
                 cb.call(self, self._visited[fromSpouse].getPrimaryPerson(), spouses);
               });
             });
@@ -612,6 +628,9 @@ module.exports = function(sdk) {
           // Call the child callback
           each(self._callbacks.child, function(cb){
             setTimeout(function() {
+              if(self._isStopped()){
+                return;
+              }
               cb.call(self, 
                 self._visited[childId].getPrimaryPerson(), 
                 (motherId)?self._visited[motherId].getPrimaryPerson():undefined, 
@@ -639,6 +658,9 @@ module.exports = function(sdk) {
             !fatherId)) {        
           each(self._callbacks.parent, function(cb){
             setTimeout(function() {
+              if(self._isStopped()){
+                return;
+              }
               cb.call(self, self._visited[motherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
             });
           });
@@ -662,6 +684,9 @@ module.exports = function(sdk) {
             !motherId)) {
           each(self._callbacks.parent, function(cb){
             setTimeout(function() {
+              if(self._isStopped()){
+                return;
+              }
               cb.call(self, self._visited[fatherId].getPrimaryPerson(), self._visited[childId].getPrimaryPerson());
             });
           });
@@ -689,6 +714,9 @@ module.exports = function(sdk) {
           if(allVisited) {
             each(self._callbacks.children, function(cb){
               setTimeout(function() {
+                if(self._isStopped()){
+                  return;
+                }
                 cb.call(self, self._visited[parent].getPrimaryPerson(), children);
               });
             });
@@ -715,6 +743,9 @@ module.exports = function(sdk) {
           if(allVisited) {
             each(self._callbacks.parents, function(cb){
               setTimeout(function() {
+                if(self._isStopped()){
+                  return;
+                }
                 cb.call(self, self._visited[child].getPrimaryPerson(), parents);
               });
             });
@@ -765,6 +796,9 @@ module.exports = function(sdk) {
           if(allVisited) {
             each(self._callbacks.relationships, function(cb){
               setTimeout(function() {
+                if(self._isStopped()){
+                  return;
+                }
                 cb.call(self, self._visited[relation].getPrimaryPerson(), self._visited[relation], related);
               });
             });
