@@ -16,8 +16,10 @@ describe('Mock SDK', function(){
       expect(spouses).to.have.length(1);
       expect(spouses[0].$getHusbandId()).to.equal('1');
       expect(spouses[0].$getWifeId()).to.equal('2');
-      var childParents = response.getChildRelationships();
-      expect(childParents).to.have.length(2);
+      var children = response.getChildRelationships();
+      expect(children).to.have.length(1);
+      var parents = response.getParentRelationships();
+      expect(parents).to.have.length(1);
       done();
     }).fail(function(e){
       console.log(e);
@@ -36,11 +38,13 @@ describe('Mock SDK', function(){
       expect(spouses).to.have.length(1);
       expect(spouses[0].$getHusbandId()).to.equal('1');
       expect(spouses[0].$getWifeId()).to.equal('2');
-      var childParents = response.getChildRelationships();
-      expect(childParents).to.have.length(1);
-      expect(childParents[0].$getChildId()).to.equal('5');
-      expect(childParents[0].$getFatherId()).to.equal('1');
-      expect(childParents[0].$getMotherId()).to.equal('2');
+      var children = response.getChildRelationships();
+      expect(children).to.have.length(1);
+      expect(children[0].$getChildId()).to.equal('5');
+      expect(children[0].$getFatherId()).to.equal('1');
+      expect(children[0].$getMotherId()).to.equal('2');
+      var parents = response.getParentRelationships();
+      expect(parents).to.have.length(0);
       done();
     }).fail(function(e){
       console.log(e);
@@ -59,11 +63,13 @@ describe('Mock SDK', function(){
       expect(spouses).to.have.length(1);
       expect(spouses[0].$getHusbandId()).to.equal('3');
       expect(spouses[0].$getWifeId()).to.equal('4');
-      var childParents = response.getChildRelationships();
-      expect(childParents).to.have.length(1);
-      expect(childParents[0].$getChildId()).to.equal('1');
-      expect(childParents[0].$getFatherId()).to.equal('3');
-      expect(childParents[0].$getMotherId()).to.equal('4');
+      var children = response.getChildRelationships();
+      expect(children).to.have.length(1);
+      expect(children[0].$getChildId()).to.equal('1');
+      expect(children[0].$getFatherId()).to.equal('3');
+      expect(children[0].$getMotherId()).to.equal('4');
+      var parents = response.getParentRelationships();
+      expect(parents).to.have.length(0);
       done();
     }).fail(function(e){
       console.log(e);
@@ -82,11 +88,13 @@ describe('Mock SDK', function(){
       expect(spouses).to.have.length(1);
       expect(spouses[0].$getHusbandId()).to.equal('3');
       expect(spouses[0].$getWifeId()).to.equal('4');
-      var childParents = response.getChildRelationships();
-      expect(childParents).to.have.length(1);
-      expect(childParents[0].$getChildId()).to.equal('1');
-      expect(childParents[0].$getFatherId()).to.equal('3');
-      expect(childParents[0].$getMotherId()).to.equal('4');
+      var children = response.getChildRelationships();
+      expect(children).to.have.length(1);
+      expect(children[0].$getChildId()).to.equal('1');
+      expect(children[0].$getFatherId()).to.equal('3');
+      expect(children[0].$getMotherId()).to.equal('4');
+      var parents = response.getParentRelationships();
+      expect(parents).to.have.length(0);
       done();
     }).fail(function(e){
       console.log(e);
@@ -103,8 +111,10 @@ describe('Mock SDK', function(){
       expect(response.getSpouseIds()).to.deep.equal([]);
       var spouses = response.getSpouseRelationships();
       expect(spouses).to.have.length(0);
-      var childParents = response.getChildRelationships();
-      expect(childParents).to.have.length(1);
+      var children = response.getChildRelationships();
+      expect(children).to.have.length(0);
+      var parents = response.getParentRelationships();
+      expect(parents).to.have.length(1);
       done();
     }).fail(function(e){
       console.log(e);

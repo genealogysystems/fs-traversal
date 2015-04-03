@@ -90,22 +90,16 @@ module.exports = function(graph) {
         
         getChildRelationships: function(){
           var childofs = _.filter(graph.childofs, function(childof){
-            return childof.father === personId || childof.mother === personId || childof.child === personId;
+            return childof.father === personId || childof.mother === personId;
           });
-          // Add mock helper functions for child relationships
-          return _.map(childofs, function(childof){
-            return {
-              $getChildId: function(){
-                return childof.child;
-              },
-              $getFatherId: function(){
-                return childof.father;
-              },
-              $getMotherId: function(){
-                return childof.mother;
-              }
-            };
+          return _.map(childofs, parentChildHelper);
+        },
+        
+        getParentRelationships: function(){
+          var parentofs = _.filter(graph.childofs, function(childOf){
+            return childOf.child === personId;
           });
+          return _.map(parentofs, parentChildHelper);
         }
       
       });
@@ -114,4 +108,21 @@ module.exports = function(graph) {
     
   }
 
+};
+
+/**
+ * Add mock helper functions for parent-child relationships
+ */
+function parentChildHelper(childof){
+  return {
+    $getChildId: function(){
+      return childof.child;
+    },
+    $getFatherId: function(){
+      return childof.father;
+    },
+    $getMotherId: function(){
+      return childof.mother;
+    }
+  };
 };

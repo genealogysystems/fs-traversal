@@ -1,6 +1,6 @@
 {
   "name": "fs-traversal",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "\"A JavaScript traversal framework for the FamilySearch Family Tree using the visitor pattern\"",
   "main": "fs-traversal.js",
   "repository": {
@@ -16,6 +16,7 @@
   "scripts": {
     "test": "mocha",
     "build": "browserify lib/fs-traversal.js -s FSTraversal | uglifyjs > fs-traversal.js",
+    "browserify": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
