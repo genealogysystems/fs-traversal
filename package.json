@@ -1,7 +1,7 @@
 {
   "name": "fs-traversal",
-  "version": "1.2.2",
-  "description": "\"A JavaScript traversal framework for the FamilySearch Family Tree using the visitor pattern\"",
+  "version": "1.2.3",
+  "description": "A JavaScript traversal framework for the FamilySearch Family Tree using the visitor pattern",
   "main": "fs-traversal.js",
   "repository": {
     "type": "git",
