@@ -252,6 +252,25 @@ traversal.spouses(function(person, spouses){
 * `person` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * `spouses` is an array of [FamilySearch SDK Persons](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 
+### .family(function)
+
+Specify a function to be called for each distinct family. You may call this function multiple times to register multiple callbacks.
+
+```js
+traversal.family(function(wife, husband, children){
+
+});
+```
+
+**Parameters**
+
+* `wife` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `husband` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+* `children` is an array of [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
+
+`wife` or `husband` may be undefined though at least one is guaranteed to be defined.
+`children` is guaranteed to have at least one entry in the array.
+
 ### .relationships(function)
 
 Specify a function to be called for a person and all of their relationships. You may call this function multiple times to register multiple callbacks.
