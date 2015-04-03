@@ -1,4 +1,4 @@
-var traversal = FSTraversal(FamilySearch)
+var traversal = FSTraversal(fsClient)
   .order('distance')
   .concurrency(1)
   .limit(30)
@@ -7,7 +7,7 @@ var traversal = FSTraversal(FamilySearch)
 
     // Only follow parent relationships
     for(var x in relationships) {
-      if(relationships[x].type == 'mother' || relationships[x].type == 'father') {
+      if(relationships[x].rel == 'mother' || relationships[x].rel == 'father') {
         follow[x] = relationships[x]; 
       }
     }

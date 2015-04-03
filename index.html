@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>FSTraversal</title>
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
       body {
         background-color: #eee;
@@ -55,11 +55,13 @@
         height: 150px;
       }
     </style>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
-    <script src="http://rootsdev.org/familysearch-javascript-sdk/familysearch-javascript-sdk.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+    <script src="//rootsdev.org/familysearch-javascript-sdk/familysearch-javascript-sdk.js"></script>
     <script src="fs-traversal.js"></script>
     <script>
+      var fsClient;
+      
       $(document).ready(function() {
         
         takeOverConsole();
@@ -72,7 +74,7 @@
           // Make sure we have an access token
           var token = $('#fs-token').val();
 
-          FamilySearch.init({
+          fsClient = new FamilySearch({
             app_key: 'fs-traversal-demo',
             environment: 'production',
             http_function: $.ajax,

@@ -1,4 +1,4 @@
-FSTraversal(FamilySearch)
+FSTraversal(fsClient)
   .order('distance')
   .limit(50)
   // For details about how the filter function works,

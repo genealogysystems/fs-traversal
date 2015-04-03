@@ -1,4 +1,4 @@
-FSTraversal(FamilySearch)
+FSTraversal(fsClient)
   .order('distance')
   .concurrency(1)
   .limit(10)
