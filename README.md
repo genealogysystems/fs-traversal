@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/genealogysystems/fs-traversal.svg?branch=master)](https://travis-ci.org/genealogysystems/fs-traversal)
+[![Coverage Status](https://coveralls.io/repos/genealogysystems/fs-traversal/badge.svg?branch=master)](https://coveralls.io/r/genealogysystems/fs-traversal?branch=master)
 [![Dependency Status](https://david-dm.org/genealogysystems/fs-traversal.svg)](https://david-dm.org/genealogysystems/fs-traversal)
 [![devDependency Status](https://david-dm.org/genealogysystems/fs-traversal/dev-status.svg)](https://david-dm.org/genealogysystems/fs-traversal#info=devDependencies)
 
