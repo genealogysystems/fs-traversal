@@ -15,7 +15,7 @@
   "homepage": "https://github.com/genealogysystems/fs-traversal",
   "scripts": {
     "test": "mocha",
-    "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js",
+    "build": "browserify lib/fs-traversal.js -s FSTraversal | uglifyjs > fs-traversal.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
@@ -29,6 +29,7 @@
     "istanbul": "0.3.13",
     "lodash": "3.6.0",
     "mocha": "2.2.1",
-    "q": "1.2.0"
+    "q": "1.2.0",
+    "uglify-js": "2.4.19"
   }
 }
