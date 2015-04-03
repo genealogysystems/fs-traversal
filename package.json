@@ -14,17 +14,17 @@
   },
   "homepage": "https://github.com/genealogysystems/fs-traversal",
   "scripts": {
-    "test": "mocha --reporter spec",
+    "test": "mocha",
     "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js"
   },
   "dependencies": {
-    "async": "git+https://git@github.com/justincy/async.git#priorityQueue"
+    "async": "0.9.0"
   },
   "devDependencies": {
-    "chai": "~1.9.1",
-    "mocha": "~1.18.2",
-    "browserify": "~4.1.2",
-    "q": "~1.0.1",
-    "lodash": "~2.4.1"
+    "chai": "2.2.0",
+    "mocha": "2.2.1",
+    "browserify": "9.0.6",
+    "q": "1.2.0",
+    "lodash": "3.6.0"
   }
 }

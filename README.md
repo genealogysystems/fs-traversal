@@ -1,3 +1,6 @@
+[![Dependency Status](https://david-dm.org/genealogysystems/fs-traversal.svg)](https://david-dm.org/genealogysystems/fs-traversal)
+[![devDependency Status](https://david-dm.org/genealogysystems/fs-traversal/dev-status.svg)](https://david-dm.org/genealogysystems/fs-traversal#info=devDependencies)
+
 # fs-traversal
 Given a starting person, it traverses through the tree (graph) using the visitor pattern to fire callbacks when people and relationships are visited.
 
