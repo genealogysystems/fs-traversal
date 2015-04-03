@@ -7,7 +7,7 @@ var expect = require('chai').expect,
     
 describe('children', function(){
 
-  it('should return all children', function(done){
+  it('simple', function(done){
     var count = 0;
     FSTraversal(simpleSDK)
       .order('distance')
