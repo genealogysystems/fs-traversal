@@ -7,6 +7,6 @@ describe('FSTraversal', function(){
     expect(function(){
       FSTraversal();
     }).to.throw(Error);
-  })
+  });
   
-})
+});

@@ -5,6 +5,22 @@ var expect = require('chai').expect,
     
 describe('relationshipTo', function(){
 
+  it('return empty string for people that are not fetched', function(){
+    var traversal = FSTraversal(sdk);
+    expect(traversal.relationshipTo('foo')).to.equal('');
+  })
+  
+  it('return proper relationship for fetched person', function(done){
+    var traversal = FSTraversal(sdk)
+      .person(function(person){
+        if(person.id === '4'){
+          expect(traversal.relationshipTo('4')).to.equal('mother');
+          done();
+        }
+      })
+      .traverse('1');
+  });
+  
   it('should return "yourself"', function(){
     testRel('yourself', [])
   });
@@ -175,11 +191,13 @@ describe('relationshipTo', function(){
     testRel('nephew', ['mother', 'son', 'son']);
     testRel('nephew', ['father', 'child', 'son']);
   });
-  
-  // TODO: test more compound relationships such as "grandson's wife's cousin"
 
   it('great uncle\'s child', function(){
     testRel('great-uncle\'s son', ['father', 'father', 'father', 'son', 'son']);
+  });
+  
+  it('crazy', function(){
+    testRel('sister-in-law\'s cousin\'s husband\'s mother-in-law', ['father', 'son', 'wife', 'mother', 'father', 'daughter', 'daughter', 'husband', 'wife', 'mother']);
   });
   
 });
