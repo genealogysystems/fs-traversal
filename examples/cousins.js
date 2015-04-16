@@ -3,7 +3,7 @@ FSTraversal(fsClient)
   .limit(50)
   // For details about how the filter function works,
   // see https://github.com/genealogysystems/fs-traversal#filterfunction
-  .filter(function(personId, relationships){
+  .filter(function(person, relationships){
     var persons = {};
     for(var id in relationships){
       var rel = relationships[id];

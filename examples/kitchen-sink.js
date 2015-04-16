@@ -2,7 +2,7 @@ var traversal = FSTraversal(fsClient)
   .order('distance')
   .concurrency(1)
   .limit(30)
-  .filter(function(personId, relationships) {
+  .filter(function(person, relationships) {
     var follow = {};
 
     // Only follow parent relationships
