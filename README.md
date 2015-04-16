@@ -105,7 +105,7 @@ Given a person node and all relationships associated with that node, returns a l
 May be called multiple times to set multiple functions, whose results will be "anded" together (the edge must be returned from every function to traverse).
 
 ```js
-function parentsOnly(personId, relationships) {
+function parentsOnly(person, relationships) {
   var follow = {};
 
   // Only follow parent relationships
@@ -123,7 +123,7 @@ traversal.filter(parentsOnly)...
 
 **Parameters**
 
-* `personId`
+* `person` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person)
 * `relationships` is an object keyed by the person id with a value that looks like:
 
     ```js
