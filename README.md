@@ -131,12 +131,6 @@ traversal.filter(parentsOnly)...
       rel: 'child', // One of child, mother, father, or spouse.
       depth: 2, // The generational distance we are from the root person. Parent is depth+1, child is depth-1 
       distance: 4, // The total number of hops we are away from the rootperson.
-      wrd: {
-        g: 2, // See wrd in .order()
-        c: 1, // See wrd in .order()
-        m: 0, // See wrd in .order()
-        up: true
-      },
       path: [] // An array representing the path to this person from the root person.
                // [{rel: 'start', person_id: personId}, {rel: 'father', person_id: personId}, ...]
     }
