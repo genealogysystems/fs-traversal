@@ -53,22 +53,33 @@ FamilySearch.init({access_token: '12345'});
 var traversal = FSTraversal(FamilySearch);
 ```
 
-### .order(type)
+### .order(order)
 
-Sets the order of the traversal. Order processed is lowest to highest. Defaults to `wrd`.
+Sets the order of the traversal. May either be a string to use a built-in order
+or a function to use a [custom order](#custom-orders). Defaults to `distance`.
 
-Possible values are:
+Built-in orders:
 
-* `ancestry` - Will only visit ancestors in order by generation.
-* `descendancy` - Will only visit descendants in order by generation.
-* `ancestry-descendancy` - Only visit direct ancestors and descendants.
 * `distance` - Every relationship followed increases the distance by one, regardless of direction.
 * `wrd` - Uses [Weighted Relationship Distance](http://fht.byu.edu/prev_workshops/workshop13/papers/baker-beyond-fhtw2013.pdf).
 * `wrd-far` - Alternative to WRD that addresses some issues. See [issue #17](https://github.com/genealogysystems/fs-traversal/issues/17) for details.
 
 ```js
-traversal.order('distance')...
+traversal.order('wrd')
 ```
+
+### .filter(filter)
+
+Filters can be used to restrict traversal independently of order. `filter` may
+either be a string, to use a built-in filter, or a function to use a [custom filter](#custom-filters).
+
+Built-in filters:
+
+* `ancestry` - Only visit direct ancestors.
+* `descendancy` - Only visit direct descendants.
+* `ancestry-descendancy` - Visit direct ancestors and direct descendants.
+* `cousins` - Visit direct ancestors, direct descendants, and all direct of ancestors (cousins). Does not include spouses; not even the spouse of the starting person.
+* `cousins-spouses` - Same as `cousins` except it _does_ include spouses of any matching persons.
 
 ### .concurrency(number)
 
@@ -85,43 +96,6 @@ If called, the traversal will only visit `number` of nodes in total. Defaults to
 ```js
 traversal.limit(100)...
 ```
-
-### .filter(function)
-
-Given a person node and all relationships associated with that node, returns a list of edges that the traversal will follow.
-May be called multiple times to set multiple functions, whose results will be "anded" together (the edge must be returned from every function to traverse).
-
-```js
-function parentsOnly(person, relationships) {
-  var follow = {};
-
-  // Only follow parent relationships
-  for(var x in relationships) {
-    if(relationships[x].rel == 'mother' || relationships[x].rel == 'father') {
-      follow[x] = relationships[x]; 
-    }
-  }
-
-  return follow;
-}
-
-traversal.filter(parentsOnly)...
-```
-
-**Parameters**
-
-* `person` is an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person)
-* `relationships` is an object keyed by the person id with a value that looks like:
-
-    ```js
-    {
-      rel: 'child', // One of child, mother, father, or spouse.
-      depth: 2, // The generational distance we are from the root person. Parent is depth+1, child is depth-1 
-      distance: 4, // The total number of hops we are away from the rootperson.
-      path: [] // An array representing the path to this person from the root person.
-               // [{rel: 'start', person_id: personId}, {rel: 'father', person_id: personId}, ...]
-    }
-    ```
 
 ### .person(function)
 
@@ -356,7 +330,7 @@ console.log(str);
 
 Get an array representing the path to a person that has been visited.
 
-```javascript
+```js
 var path = traversal.pathTo(id);
 console.log(path);
 // [{rel: 'start', person: Person}, {rel: 'father', person: Person}, ... ]
@@ -365,3 +339,76 @@ console.log(path);
 * All person objects are an instance of [FamilySearch.Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person).
 * The first person in the array is the start person for the traversal.
 * Possible values for the relationships strings are `start`, `child`, `father`, `mother`, `spouse`.
+
+## Custom Orders and Filters
+
+### Custom Orders
+
+Traversal order is managed by a priority queue. Each person is assigned a weight
+which determines their in the queue. Lower numbers are a higher priority. 
+Order functions calculate and return a number representing the person's weight.
+Order functions are given [position objects](#position-objects).
+
+The built-in distance order function just returns the distance.
+
+```js
+traversal.order(function(fetchObj){
+  return fetchObj.distance;
+})
+```
+
+`wrd` and `wrd-far` examine the path to calculate a weighted number that gives
+priority to close and direct ancestors. For a depth-first traversal you could 
+return the negated distance.
+
+Additional parameters can be specified which are in turn passed into the order 
+function each time it's called. This can be used to adjust the weights used
+in the `wrd` calculation.
+
+```js
+traversal.order('wrd', {
+  gPositive: 1,
+  gNegative: 1.76,
+  c: 1,
+  m: 1.42
+})
+```
+
+### Custom Filters
+
+Custom filter functions are given the current person object 
+(an instance of a [FamilySearch SDK Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person))
+and a list of [position objects](#position-objects) for all related persons keyed by person id. 
+The function must return a list of relationships that should be followed. 
+When multiple filter functions are set, the results are anded together meaning 
+the traversal only follows relationships that are returned by _all_ filter functions.
+
+```js
+traversal.filter(function(person, relationships){
+  var follow = {};
+
+  // Only follow parent relationships
+  for(var x in relationships) {
+    if(relationships[x].rel == 'mother' || relationships[x].rel == 'father') {
+      follow[x] = relationships[x]; 
+    }
+  }
+
+  return follow;
+});
+```
+
+### Position Objects
+
+These objects are used internally by FSTraversal to track a person's position in
+the graph. They are exposed to order and filter functions.
+
+```js
+{
+  rel: 'child', // One of child, mother, father, or spouse. Represents this person's relationship to the previous person in the path.
+  depth: 2, // The generational distance we are from the root person. Parent is depth+1, child is depth-1 
+  distance: 4, // The total number of hops we are away from the root person.
+  path: [] // An array representing the path to this person from the root person.
+           // [{rel: 'start', person_id: personId}, {rel: 'father', person_id: personId}, ...]
+}
+```
