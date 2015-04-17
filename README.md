@@ -34,14 +34,6 @@ traversal.traverse();
 
 See [http://genealogysystems.github.io/fs-traversal](http://genealogysystems.github.io/fs-traversal).
 
-# Testing
-
-We have a fairly comprehensive test suite, as well as a mock FamilySearch SDK.
-```bash
-# cd to the cloned repo and run
-mocha
-```
-
 # Reference
 
 ### FSTraversal(fs-sdk)
@@ -419,4 +411,12 @@ the graph. They are exposed to order and filter functions.
   path: [] // An array representing the path to this person from the root person.
            // [{rel: 'start', person_id: personId}, {rel: 'father', person_id: personId}, ...]
 }
+```
+
+# Testing
+
+We have a fairly comprehensive test suite, as well as a mock FamilySearch SDK.
+```bash
+# cd to the cloned repo and run
+mocha
 ```
