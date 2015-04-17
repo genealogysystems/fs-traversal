@@ -340,6 +340,14 @@ console.log(path);
 * The first person in the array is the start person for the traversal.
 * Possible values for the relationships strings are `start`, `child`, `father`, `mother`, `spouse`.
 
+### .weight(id)
+
+Get the weight of a person that has been fetched. Weights are calculated by the order function.
+
+```js
+traversal.weight(id);
+```
+
 ## Custom Orders and Filters
 
 ### Custom Orders

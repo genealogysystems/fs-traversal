@@ -21,7 +21,7 @@ describe('order - wrd', function(){
       .order('wrd')
       .person(function(person){
         personCount++;
-        expect(this._fetched[person.id].weight).to.be.closeTo(weights[person.id], .01);
+        expect(this.weight(person.id)).to.be.closeTo(weights[person.id], .01);
       })
       .traverse('1')
       .done(function(){
@@ -84,7 +84,7 @@ describe('order - wrd', function(){
       .person(function(person){
         personCount++;
         //console.log('%s: %d,', person.id, this._calcWeight(this._fetched[person.id]));
-        expect(this._fetched[person.id].weight).to.be.closeTo(weights[person.id], .01);
+        expect(this.weight(person.id)).to.be.closeTo(weights[person.id], .01);
       })
       .traverse('1')
       .done(function(){
