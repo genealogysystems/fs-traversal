@@ -4,7 +4,7 @@ var expect = require('chai').expect,
     mockSDK = require('./lib/mock-sdk.js'),
     FSTraversal = require('./../lib/fs-traversal.js');
     
-describe.skip('traversal - ancestry', function(){
+describe('traversal - ancestry', function(){
   
   it('simple', function(done){
     
@@ -14,7 +14,7 @@ describe.skip('traversal - ancestry', function(){
         parentCount = 0;
         
     FSTraversal(mockSDK(simpleGraph))
-      .order('ancestry')
+      .filter('ancestry')
       .person(function(person){
         visitedPersons.push(person);
       })
@@ -54,7 +54,7 @@ describe.skip('traversal - ancestry', function(){
         parentCount = 0;
     
     FSTraversal(mockSDK(largeGraph))
-      .order('ancestry')
+      .filter('ancestry')
       .person(function(person){
         visitedPersons.push(person);
       })

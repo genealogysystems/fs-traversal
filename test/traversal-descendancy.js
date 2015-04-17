@@ -3,7 +3,7 @@ var expect = require('chai').expect,
     sdk = require('./lib/mock-sdk.js')(graph),
     FSTraversal = require('./../lib/fs-traversal.js');
     
-describe.skip('traversal - descendancy', function(){
+describe('traversal - descendancy', function(){
   
   it('simple', function(done){
     
@@ -13,7 +13,7 @@ describe.skip('traversal - descendancy', function(){
         parentCount = 0;
         
     FSTraversal(sdk)
-      .order('descendancy')
+      .filter('descendancy')
       .person(function(person){
         visitedPersons.push(person);
       })
