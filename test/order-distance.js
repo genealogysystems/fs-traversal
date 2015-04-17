@@ -3,7 +3,7 @@ var expect = require('chai').expect,
     sdk = require('./lib/mock-sdk.js')(graph),
     FSTraversal = require('./../lib/fs-traversal.js');
     
-describe('traversal - distance', function(){
+describe('order - distance', function(){
   
   it('simple', function(done){
     

@@ -5,7 +5,7 @@ var expect = require('chai').expect,
     largeSDK = require('./lib/mock-sdk.js')(largeGraph),
     FSTraversal = require('./../lib/fs-traversal.js');
     
-describe('traversal - wrd', function(){
+describe('order - wrd', function(){
   
   it('simple', function(done){
     var weights = {
