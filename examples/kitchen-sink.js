@@ -1,19 +1,8 @@
 var traversal = FSTraversal(fsClient)
-  .order('distance')
-  .concurrency(1)
+  .order('wrd')
+  .filter('ancestry')
+  .concurrency(10)
   .limit(30)
-  .filter(function(person, relationships) {
-    var follow = {};
-
-    // Only follow parent relationships
-    for(var x in relationships) {
-      if(relationships[x].rel == 'mother' || relationships[x].rel == 'father') {
-        follow[x] = relationships[x]; 
-      }
-    }
-
-    return follow;
-  })
   .person(function(person, callback) {
     console.log('visited ' + person.$getDisplayName());
     console.log('relationship: ' + traversal.relationshipTo(person.id));
