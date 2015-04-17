@@ -29,4 +29,20 @@ describe('filter', function(){
       });
   });
   
+  it('throw exception when built-in does not exist', function(){
+    var invalid = function(){
+      FSTraversal(sdk)
+        .filter('foo');
+    };
+    expect(invalid).to.throw(Error);
+  });
+  
+  it('throw exception when not given a string or function', function(){
+    var invalid = function(){
+      FSTraversal(sdk)
+        .filter(123);
+    };
+    expect(invalid).to.throw(Error);
+  });
+  
 });

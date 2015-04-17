@@ -10,20 +10,15 @@ describe('order - wrd', function(){
   it('simple', function(done){
     var weights = {
       1: 1.0,
-      2: 4.14,
+      2: 2.718,
       3: 2,
       4: 2,
-      5: 3.52
+      5: 2
     };
     var personCount = 0;
         
     FSTraversal(simpleSDK)
-      .order('wrd', {
-        gPositive: 1,
-        gNegative: 1.76,
-        c: 1,
-        m: 1.42
-      })
+      .order('wrd')
       .person(function(person){
         personCount++;
         expect(this._fetched[person.id].weight).to.be.closeTo(weights[person.id], .01);
