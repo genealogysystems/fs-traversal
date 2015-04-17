@@ -24,7 +24,7 @@ describe('traversal - distance', function(){
       .order('distance')
       .person(function(person){
         visitedPersons.push(person);
-        expect(this._calcWeight(this._fetched[person.id])).to.equal(weights[person.id]);
+        expect(this._fetched[person.id].weight).to.equal(weights[person.id]);
       })
       .marriage(function(wife, husband, marriage){
         expect(visitedPersons).to.deep.include.members([wife]);

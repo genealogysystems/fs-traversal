@@ -4,7 +4,7 @@ var expect = require('chai').expect,
     mockSDK = require('./lib/mock-sdk.js'),
     FSTraversal = require('./../lib/fs-traversal.js');
     
-describe('traversal - ancestry-descendancy', function(){
+describe.skip('traversal - ancestry-descendancy', function(){
   
   it('simple', function(done){
     

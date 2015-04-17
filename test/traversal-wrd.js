@@ -18,8 +18,7 @@ describe('traversal - wrd', function(){
     var personCount = 0;
         
     FSTraversal(simpleSDK)
-      .order('wrd')
-      .wrd({
+      .order('wrd', {
         gPositive: 1,
         gNegative: 1.76,
         c: 1,
@@ -27,7 +26,7 @@ describe('traversal - wrd', function(){
       })
       .person(function(person){
         personCount++;
-        expect(this._calcWeight(this._fetched[person.id])).to.be.closeTo(weights[person.id], .01);
+        expect(this._fetched[person.id].weight).to.be.closeTo(weights[person.id], .01);
       })
       .traverse('1')
       .done(function(){
@@ -81,8 +80,7 @@ describe('traversal - wrd', function(){
     var personCount = 0;
         
     FSTraversal(largeSDK)
-      .order('wrd')
-      .wrd({
+      .order('wrd', {
         gPositive: 1,
         gNegative: 1.76,
         c: 1,
@@ -91,7 +89,7 @@ describe('traversal - wrd', function(){
       .person(function(person){
         personCount++;
         //console.log('%s: %d,', person.id, this._calcWeight(this._fetched[person.id]));
-        expect(this._calcWeight(this._fetched[person.id])).to.be.closeTo(weights[person.id], .01);
+        expect(this._fetched[person.id].weight).to.be.closeTo(weights[person.id], .01);
       })
       .traverse('1')
       .done(function(){

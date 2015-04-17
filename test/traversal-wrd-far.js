@@ -21,7 +21,7 @@ describe('traversal - wrd-far', function(){
       .order('wrd-far')
       .person(function(person){
         personCount++;
-        expect(this._calcWeight(this._fetched[person.id])).to.be.closeTo(weights[person.id], .01);
+        expect(this._fetched[person.id].weight).to.be.closeTo(weights[person.id], .01);
       })
       .traverse('1')
       .done(function(){
@@ -78,7 +78,7 @@ describe('traversal - wrd-far', function(){
       .order('wrd-far')
       .person(function(person){
         personCount++;
-        expect(this._calcWeight(this._fetched[person.id])).to.be.closeTo(weights[person.id], .01);
+        expect(this._fetched[person.id].weight).to.be.closeTo(weights[person.id], .01);
       })
       .traverse('1')
       .done(function(){
