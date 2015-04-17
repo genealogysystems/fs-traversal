@@ -78,7 +78,7 @@ Built-in filters:
 * `ancestry` - Only visit direct ancestors.
 * `descendancy` - Only visit direct descendants.
 * `ancestry-descendancy` - Visit direct ancestors and direct descendants.
-* `cousins` - Visit direct ancestors, direct descendants, and all direct of ancestors (cousins). Does not include spouses; not even the spouse of the starting person.
+* `cousins` - Visit direct ancestors, direct descendants, and all direct descendants of ancestors (cousins). Does not include spouses; not even the spouse of the starting person.
 * `cousins-spouses` - Same as `cousins` except it _does_ include spouses of any matching persons.
 
 ### .concurrency(number)
