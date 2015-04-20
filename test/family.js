@@ -1,8 +1,9 @@
 var expect = require('chai').expect,
+    sdk = require('./lib/mock-sdk.js'),
     simpleGraph = require('./graphs/simple.js'),
     largeGraph = require('./graphs/large.js'),
-    simpleSdk = require('./lib/mock-sdk.js')(simpleGraph),
-    largeSdk = require('./lib/mock-sdk.js')(largeGraph),
+    simpleSdk = sdk(simpleGraph),
+    largeSdk = sdk(largeGraph),
     FSTraversal = require('../lib/fs-traversal.js');
     
 describe('family callback', function(){
@@ -61,4 +62,32 @@ describe('family callback', function(){
       });
   });
   
-})
+  it('family with only one parent', function(done){
+    FSTraversal(sdk(singleParentGraph))
+      .order('distance')
+      .family(function(wife, husband, children){
+        // register callback so that families are processed
+      })
+      .traverse('1')
+      .done(function(){
+        // if it makes it here then we didn't hit an error
+        done();
+      });
+  });
+  
+});
+
+var singleParentGraph = {
+  
+  persons: [
+    {id:'1', name:'parent'},
+    {id:'2', name:'child1'},
+    {id:'3', name:'child2'}
+  ],
+    
+  childofs: [
+    {child:'2', father:'1'},
+    {child:'3', father:'1'}
+  ]
+  
+};
