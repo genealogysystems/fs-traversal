@@ -15,7 +15,7 @@
   "homepage": "https://github.com/genealogysystems/fs-traversal",
   "scripts": {
     "test": "mocha",
-    "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js && uglifyjs fs-traversal.js --source-map fs-traversal.min.js.map > fs-traversal.min.js",
+    "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js && uglifyjs fs-traversal.js -o fs-traversal.min.js --source-map fs-traversal.min.js.map --source-map-root http://genealogysystems.github.io/fs-check/",
     "browserify": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
