@@ -35,18 +35,24 @@ module.exports = function(graph) {
         deferred.resolve({
         
           getPrimaryId: function(){
-            return personId;
+            if(graph.redirects && graph.redirects[personId]){
+              return graph.redirects[personId];
+            } else {
+              return personId;
+            }
           },
           
           getPrimaryPerson: function(){
+            var primaryId = this.getPrimaryId();
             return _.find(graph.persons, function(person){
-              return person.id === personId;
+              return person.id === primaryId;
             });
           },
           
           getChildIds: function(){
+            var primaryId = this.getPrimaryId();
             var childofs = _.filter(graph.childofs, function(childof){
-              return childof.father === personId || childof.mother === personId;
+              return childof.father === primaryId || childof.mother === primaryId;
             });
             return _.map(childofs, function(childof){
               return childof.child;
@@ -54,8 +60,9 @@ module.exports = function(graph) {
           },
           
           getFatherIds: function(){
+            var primaryId = this.getPrimaryId();
             var childofs = _.filter(graph.childofs, function(childof){
-              return childof.child === personId;
+              return childof.child === primaryId;
             });
             return _.map(childofs, function(childof){
               return childof.father;
@@ -63,8 +70,9 @@ module.exports = function(graph) {
           },
           
           getMotherIds: function(){
+            var primaryId = this.getPrimaryId();
             var childofs = _.filter(graph.childofs, function(childof){
-              return childof.child === personId;
+              return childof.child === primaryId;
             });
             return _.map(childofs, function(childof){
               return childof.mother;
@@ -72,11 +80,12 @@ module.exports = function(graph) {
           },
           
           getSpouseIds: function(){
+            var primaryId = this.getPrimaryId();
             var marriages = _.filter(graph.marriages, function(marriage){
-              return marriage.husband === personId || marriage.wife === personId;
+              return marriage.husband === primaryId || marriage.wife === primaryId;
             });
             return _.map(marriages, function(marriage){
-              if(marriage.husband !== personId){
+              if(marriage.husband !== primaryId){
                 return marriage.husband;
               } else {
                 return marriage.wife;
@@ -85,8 +94,9 @@ module.exports = function(graph) {
           },
           
           getSpouseRelationships: function(){
+            var primaryId = this.getPrimaryId();
             var marriages = _.filter(graph.marriages, function(marriage){
-              return marriage.husband === personId || marriage.wife === personId;
+              return marriage.husband === primaryId || marriage.wife === primaryId;
             });
             // Add mock helper functions for spouse relationships
             return _.map(marriages, function(marriage){
@@ -102,15 +112,17 @@ module.exports = function(graph) {
           },
           
           getChildRelationships: function(){
+            var primaryId = this.getPrimaryId();
             var childofs = _.filter(graph.childofs, function(childof){
-              return childof.father === personId || childof.mother === personId;
+              return childof.father === primaryId || childof.mother === primaryId;
             });
             return _.map(childofs, parentChildHelper);
           },
           
           getParentRelationships: function(){
+            var primaryId = this.getPrimaryId();
             var parentofs = _.filter(graph.childofs, function(childOf){
-              return childOf.child === personId;
+              return childOf.child === primaryId;
             });
             return _.map(parentofs, parentChildHelper);
           }
