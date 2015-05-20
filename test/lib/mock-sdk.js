@@ -42,6 +42,14 @@ module.exports = function(graph) {
             }
           },
           
+          getRequestedId: function(){
+            return personId;
+          },
+          
+          wasRedirected: function(){
+            return this.getPrimaryId() !== this.getRequestedId();
+          },
+          
           getPrimaryPerson: function(){
             var primaryId = this.getPrimaryId();
             return _.find(graph.persons, function(person){

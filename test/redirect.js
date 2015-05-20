@@ -7,10 +7,13 @@ describe('redirects', function(){
   it('properly handle ids of redirected (merged) persons', function(done){
     var traversal = FSTraversal(sdk)
       .person(function(person){
-        expect(person.id).to.equal('10');
-        expect(traversal.relationshipTo(person.id)).to.equal('yourself');
-        expect(traversal.pathTo(person.id)[0].rel).to.equal('start');
-        expect(traversal.weight(person.id)).to.equal(0);
+        if(person.id === '10'){
+          expect(traversal.relationshipTo(person.id)).to.equal('yourself');
+          expect(traversal.pathTo(person.id)[0].rel).to.equal('start');
+          expect(traversal.weight(person.id)).to.equal(0);
+        } else if(person.id === '1'){
+          expect(true).to.be.false;
+        }
       })
       .traverse('1')
       .done(function(){
