@@ -1,6 +1,5 @@
-var each = require('./utils').each;
-
-var relConfig = module.exports = {
+module.exports = {
+  code: 'en',
   base: 'yourself',
   join: function(rels){
     return rels.join("'s ");
@@ -198,13 +197,3 @@ var relConfig = module.exports = {
     }
   ]
 };
-
-// Create regex objects for relConfig. This is done
-// so that we don't need to generate correct regex
-// objects in the patterns with leading ^ and
-// trailing $. This wouldn't be useful if we allowed
-// regex to only examine portions of a rel string
-// but we don't allow that.
-each(relConfig.patterns, function(c){
-  c.regex = new RegExp('^' + c.pattern + '$');
-});

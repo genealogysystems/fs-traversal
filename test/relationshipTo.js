@@ -7,14 +7,14 @@ describe('relationshipTo', function(){
 
   it('return empty string for people that are not fetched', function(){
     var traversal = FSTraversal(sdk);
-    expect(traversal.relationshipTo('foo')).to.equal('');
+    expect(traversal.relationshipTo('foo', 'en')).to.equal('');
   })
   
   it('return proper relationship for fetched person', function(done){
     var traversal = FSTraversal(sdk)
       .person(function(person){
         if(person.id === '4'){
-          expect(traversal.relationshipTo('4')).to.equal('mother');
+          expect(traversal.relationshipTo('4', 'en')).to.equal('mother');
           done();
         }
       })
@@ -210,7 +210,7 @@ function testRel(rel, path){
  * Returns a relationship string from a path
  */
 function relFromPath(path){
-  return FSTraversal(sdk)._relationshipTo(genPath(path));
+  return FSTraversal(sdk)._relationshipTo(genPath(path), 'en');
 };
 
 /**
