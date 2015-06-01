@@ -19,7 +19,14 @@ describe('FSTraversal', function(){
       expect(e).to.exist;
       delete GLOBAL.SDK_ERROR;
       done();
-    })
+    });
   });
+  
+  it('concurrency', function(){
+    var traversal = FSTraversal(sdk);
+    expect(traversal._concurrency).to.equal(5);
+    traversal.concurrency(3);
+    expect(traversal._concurrency).to.equal(3);
+  })
   
 });

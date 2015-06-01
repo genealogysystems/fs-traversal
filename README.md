@@ -75,7 +75,7 @@ Built-in filters:
 
 ### .concurrency(number)
 
-The maximum number of concurrent requests to the FamilySearch API. Defaults to `1`.
+The maximum number of concurrent requests to the FamilySearch API. Defaults to `5`.
 
 ```js
 traversal.concurrency(2)...
