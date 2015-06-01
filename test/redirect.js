@@ -8,7 +8,7 @@ describe('redirects', function(){
     var traversal = FSTraversal(sdk)
       .person(function(person){
         if(person.id === '10'){
-          expect(traversal.relationshipTo(person.id)).to.equal('yourself');
+          expect(traversal.relationshipTo(person.id, 'en')).to.equal('yourself');
           expect(traversal.pathTo(person.id)[0].rel).to.equal('start');
           expect(traversal.weight(person.id)).to.equal(0);
         } else if(person.id === '1'){
