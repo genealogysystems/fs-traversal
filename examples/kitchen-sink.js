@@ -3,7 +3,7 @@ var traversal = FSTraversal(fsClient)
   .filter('ancestry')
   .concurrency(10)
   .limit(30)
-  .person(function(person, callback) {
+  .person(function(person) {
     console.log('visited ' + person.$getDisplayName());
     console.log('relationship: ' + traversal.relationshipTo(person.id));
   })

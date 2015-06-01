@@ -2,7 +2,7 @@ FSTraversal(fsClient)
   .order('distance')
   .concurrency(1)
   .limit(10)
-  .person(function(person, callback) {
+  .person(function(person) {
     console.log('visited ' + person.$getDisplayName());
   })
   .done(function() {
