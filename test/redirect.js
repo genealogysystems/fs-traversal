@@ -15,7 +15,7 @@ describe('redirects', function(){
           expect(true).to.be.false;
         }
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         done();
       });

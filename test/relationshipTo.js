@@ -18,7 +18,7 @@ describe('relationshipTo', function(){
           done();
         }
       })
-      .traverse('1');
+      .start('1');
   });
   
   it('should return "yourself"', function(){

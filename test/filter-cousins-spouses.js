@@ -38,7 +38,7 @@ describe('filter - cousins-spouses', function(){
         expect(visitedPersons).to.deep.include.members([child]);
         parentCount++;
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(visitedPersons).to.have.length(5);
         expect(childCount).to.equal(2);
@@ -78,7 +78,7 @@ describe('filter - cousins-spouses', function(){
         expect(visitedPersons).to.deep.include.members([child]);
         parentCount++;
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(visitedPersons).to.have.length(26);
         expect(childCount).to.equal(13);

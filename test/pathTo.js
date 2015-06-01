@@ -13,7 +13,7 @@ describe('pathTo', function(){
   it('should return array with just start person when called on start person', function(done){
     var traversal = FSTraversal(sdk)
       .order('distance')
-      .traverse('1')
+      .start('1')
       .done(function(){
         var path = traversal.pathTo('1');
         expect(path).to.have.length(1);
@@ -25,7 +25,7 @@ describe('pathTo', function(){
   it('should return correct paths', function(done){
     var traversal = FSTraversal(sdk)
       .order('distance')
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(traversal.pathTo('2')).to.deep.equal([
           {rel:'start',person:{id:'1',name:'base person'}},

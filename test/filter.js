@@ -22,7 +22,7 @@ describe('filter', function(){
           return relationships;
         }
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(persons).to.equal(30);
         done();

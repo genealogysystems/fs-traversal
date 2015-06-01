@@ -14,7 +14,7 @@ describe('FSTraversal', function(){
   it('throw error', function(done){
     GLOBAL.SDK_ERROR = true;
     FSTraversal(sdk)
-    .traverse('1')
+    .start('1')
     .error(function(e){
       expect(e).to.exist;
       delete GLOBAL.SDK_ERROR;

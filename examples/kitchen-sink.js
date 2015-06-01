@@ -28,7 +28,7 @@ var traversal = FSTraversal(fsClient)
 
 console.log('status: '+traversal.status());
 
-traversal.traverse();
+traversal.start();
 
 setTimeout(function(){
   console.log('status: '+traversal.status());

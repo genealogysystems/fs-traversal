@@ -25,9 +25,8 @@ traversal
   })
   .done(function() {
     console.log('done!');
-  });
-
-traversal.traverse();
+  })
+  .start();
 ```
 
 # Examples
@@ -299,14 +298,16 @@ traversal.error(function(){
 })
 ```
 
-### .traverse([start])
+### .start([start])
 
 Begin the traversal starting at `start`, which should be a valid FS Person Id.
 If start is not passed in, the traversal will start from the user returned by `FamilySearch.getCurrentUser()`.
 
 ```js
-traversal.traverse('LZNY-BRX');
+traversal.start('LZNY-BRX');
 ```
+
+This function is also aliased as `traverse` for backwards compatibility.
 
 ### .relationshipTo(id, lang)
 

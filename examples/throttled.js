@@ -8,4 +8,4 @@ FSTraversal(fsClient)
   .done(function() {
     console.log('complete');
   })
-  .traverse();
+  .start();

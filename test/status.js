@@ -30,7 +30,7 @@ describe('status', function(){
           done();
         }
       })
-      .traverse('1');
+      .start('1');
     expect(traversal.status()).to.equal('running');
   });
   
@@ -41,7 +41,7 @@ describe('status', function(){
         expect(traversal.status()).to.equal('done');
         done();
       })
-      .traverse('1');
+      .start('1');
   });
   
 });

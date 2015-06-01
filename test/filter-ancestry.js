@@ -38,7 +38,7 @@ describe('filter - ancestry', function(){
         expect(visitedPersons).to.deep.include.members([child]);
         parentCount++;
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(visitedPersons).to.have.length(3);
         expect(childCount).to.equal(1);
@@ -78,7 +78,7 @@ describe('filter - ancestry', function(){
         expect(visitedPersons).to.deep.include.members([child]);
         parentCount++;
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(visitedPersons).to.have.length(9);
         expect(childCount).to.equal(4);

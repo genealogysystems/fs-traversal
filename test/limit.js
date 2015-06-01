@@ -13,7 +13,7 @@ describe('limit', function(){
       .person(function(){
         count++;
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(count).to.equal(2);
         done();

@@ -33,8 +33,18 @@ module.exports = function(graph) {
       var deferred = Q.defer();
       setTimeout(function(){
         
+        // Simulate an error
         if(GLOBAL.SDK_ERROR){
           deferred.reject(new Error('Simulating error'));
+          return;
+        }
+        
+        // Throw error if the person doesn't exist to mimic 404
+        var person = _.find(graph.persons, function(person){
+          return person.id === personId;
+        });
+        if(!person && (!graph.redirects || !graph.redirects[personId])){
+          deferred.reject(new Error('person does not exist'));
           return;
         }
         
@@ -76,7 +86,7 @@ module.exports = function(graph) {
           getFatherIds: function(){
             var primaryId = this.getPrimaryId();
             var childofs = _.filter(graph.childofs, function(childof){
-              return childof.child === primaryId;
+              return childof.child === primaryId && childof.father;
             });
             return _.map(childofs, function(childof){
               return childof.father;
@@ -86,7 +96,7 @@ module.exports = function(graph) {
           getMotherIds: function(){
             var primaryId = this.getPrimaryId();
             var childofs = _.filter(graph.childofs, function(childof){
-              return childof.child === primaryId;
+              return childof.child === primaryId && childof.mother;
             });
             return _.map(childofs, function(childof){
               return childof.mother;

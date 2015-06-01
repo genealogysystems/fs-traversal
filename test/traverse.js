@@ -12,26 +12,36 @@ describe('traverse', function(){
         expect(person.id).to.equal('1');
         done();
       })
+      .start();
+  });
+  
+  it('alias', function(done){
+    FSTraversal(sdk)
+      .limit(1)
+      .person(function(person){
+        expect(person.id).to.equal('1');
+        done();
+      })
       .traverse();
   });
   
-  it('specific person', function(){
+  it('specific person', function(done){
     FSTraversal(sdk)
       .limit(1)
       .person(function(person){
         expect(person.id).to.equal('2');
         done();
       })
-      .traverse('2');
+      .start('2');
   });
   
-  it('specific person does not exist', function(){
+  it('specific person does not exist', function(done){
     FSTraversal(sdk)
       .limit(1)
       .error(function(){
         done();
       })
-      .traverse('10');
+      .start('10');
   });
   
 });

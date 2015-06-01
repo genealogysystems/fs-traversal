@@ -17,7 +17,7 @@ describe('family callback', function(){
           return child.id;
         })).join(':'));
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(familyIds).to.have.length(2);
         expect(familyIds).to.have.members([
@@ -38,7 +38,7 @@ describe('family callback', function(){
         })).join(':');
         familyIds.push(familyId);
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(familyIds).to.have.length(15);
         expect(familyIds).to.have.members([
@@ -68,7 +68,7 @@ describe('family callback', function(){
       .family(function(wife, husband, children){
         // register callback so that families are processed
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         // if it makes it here then we didn't hit an error
         done();

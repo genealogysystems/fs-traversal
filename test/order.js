@@ -21,7 +21,9 @@ describe('order', function(){
   
   it('exception when setting order after traversal begins', function(){
     function invalid(){
-      FSTraversal(sdk).traverse('1').order('distance');
+      FSTraversal(sdk)
+        .start('1')
+        .order('distance');
     }
     expect(invalid).to.throw(Error);
   });
@@ -40,7 +42,7 @@ describe('order', function(){
         expect(ids).to.deep.equal(['1','3','4','6','7','13','14','15','16']);
         done();
       })
-      .traverse();
+      .start();
   });
   
 });

@@ -30,7 +30,7 @@ describe('lang', function(){
   
   it('throw error when lang param does not exist', function(done){
     var traversal = FSTraversal(sdk)
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(function(){
           traversal.relationshipTo('4');
@@ -41,7 +41,7 @@ describe('lang', function(){
   
   it('throw error when calling lang that does not exist', function(done){
     var traversal = FSTraversal(sdk)
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(function(){
           traversal.relationshipTo('4', 'frazzle');

@@ -37,7 +37,7 @@ describe('filter - descendancy', function(){
         expect(visitedPersons).to.deep.include.members([child]);
         parentCount++;
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         expect(visitedPersons).to.have.length(2);
         expect(childCount).to.equal(0);

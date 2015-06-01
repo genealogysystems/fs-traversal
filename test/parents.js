@@ -30,7 +30,7 @@ describe('parents', function(){
             break;
         }
       })
-      .traverse('1')
+      .start('1')
       .done(function(){
         done();
       });
