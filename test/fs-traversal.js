@@ -1,5 +1,7 @@
 var expect = require('chai').expect,
-    FSTraversal = require('../lib/fs-traversal.js');
+    graph = require('./graphs/simple.js'),
+    sdk = require('./lib/mock-sdk.js')(graph),
+    FSTraversal = require('./../lib/fs-traversal.js');
     
 describe('FSTraversal', function(){
   
@@ -7,6 +9,17 @@ describe('FSTraversal', function(){
     expect(function(){
       FSTraversal();
     }).to.throw(Error);
+  });
+  
+  it('throw error', function(done){
+    GLOBAL.SDK_ERROR = true;
+    FSTraversal(sdk)
+    .traverse('1')
+    .error(function(e){
+      expect(e).to.exist;
+      delete GLOBAL.SDK_ERROR;
+      done();
+    })
   });
   
 });

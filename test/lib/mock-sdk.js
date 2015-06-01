@@ -32,6 +32,12 @@ module.exports = function(graph) {
     getPersonWithRelationships: function(personId){
       var deferred = Q.defer();
       setTimeout(function(){
+        
+        if(GLOBAL.SDK_ERROR){
+          deferred.reject(new Error('Simulating error'));
+          return;
+        }
+        
         deferred.resolve({
         
           getPrimaryId: function(){
