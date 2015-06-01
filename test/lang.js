@@ -3,7 +3,7 @@ var expect = require('chai').expect,
     sdk = require('./lib/mock-sdk.js')(graph),
     FSTraversal = require('./../lib/fs-traversal.js');
     
-describe.only('lang', function(){
+describe('lang', function(){
 
   it('register', function(){
     FSTraversal.lang({
