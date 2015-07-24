@@ -100,7 +100,7 @@ module.exports = {
       rel: 'great-granddaughter'
     },
     {
-      pattern: '(s|d|c){2}d',
+      pattern: '(s|d|c){2}c',
       rel: 'great-grandchild'
     },
     // nth great grandchild
@@ -199,6 +199,206 @@ module.exports = {
   ]
 };
 },{}],2:[function(require,module,exports){
+module.exports = {
+  code: 'es',
+  base: 'ego',
+  join: function(rels){
+    rels.reverse();
+    return rels.join(" de ").replace(/de el/g, 'del');
+  },
+  patterns: [
+    {
+      pattern: 'f',
+      rel: 'el padre'
+    },
+    {
+      pattern: 'm',
+      rel: 'la madre'
+    },
+    {
+      pattern: 's',
+      rel: 'el hijo'
+    },
+    {
+      pattern: 'd',
+      rel: 'la hija'
+    },
+    {
+      pattern: 'c',
+      rel: 'el hijo'
+    },
+    {
+      pattern: 'h',
+      rel: 'el esposo'
+    },
+    {
+      pattern: 'w',
+      rel: 'la esposa'
+    },
+    {
+      pattern: '(m|f)s',
+      rel: 'el hermano'
+    },
+    {
+      pattern: '(m|f)d',
+      rel: 'la hermana'
+    },
+    {
+      pattern: '(m|f)c',
+      rel: 'el hermano'
+    },
+    // grandparents
+    {
+      pattern: '(m|f)f',
+      rel: 'el abuelo'
+    },
+    {
+      pattern: '(m|f)m',
+      rel: 'la abuela'
+    },
+    {
+      pattern: '(m|f){2}f',
+      rel: 'el bisabuelo'
+    },
+    {
+      pattern: '(m|f){2}m',
+      rel: 'la bisabuela'
+    },
+    {
+      pattern: '(m|f){3}f',
+      rel: 'el tatarabuelo'
+    },
+    {
+      pattern: '(m|f){3}m',
+      rel: 'la tatarabuela'
+    },
+    {
+      pattern: '(m|f){4}f',
+      rel: 'el trastatarabuelo'
+    },
+    {
+      pattern: '(m|f){4}m',
+      rel: 'la trastatarabuela'
+    },
+    // grandchildren
+    {
+      pattern: '(s|d|c)s',
+      rel: 'el nieto'
+    },
+    {
+      pattern: '(s|d|c)d',
+      rel: 'la nieta'
+    },
+    {
+      pattern: '(s|d|c)c',
+      rel: 'el nieto'
+    },
+    {
+      pattern: '(s|d|c){2}s',
+      rel: 'el bisnieto'
+    },
+    {
+      pattern: '(s|d|c){2}d',
+      rel: 'la bisnieta'
+    },
+    {
+      pattern: '(s|d|c){2}c',
+      rel: 'el bisnieto'
+    },
+    {
+      pattern: '(s|d|c){3}s',
+      rel: 'el tataranieto'
+    },
+    {
+      pattern: '(s|d|c){3}d',
+      rel: 'la tataranieta'
+    },
+    {
+      pattern: '(s|d|c){3}c',
+      rel: 'el tataranieto'
+    },
+    // In-laws
+    {
+      pattern: '(h|w)f',
+      rel: 'el suegro'
+    },
+    {
+      pattern: '(h|w)m',
+      rel: 'la suegra'
+    },
+    // Spouse's siblings
+    {
+      pattern: '(h|w)(m|f)s',
+      rel: 'el cuñado'
+    },
+    {
+      pattern: '(h|w)(m|f)d',
+      rel: 'la cuñada'
+    },
+    // Sibling's spouses
+    {
+      pattern: '(m|f)dh',
+      rel: 'el cuñado'
+    },
+    {
+      pattern: '(m|f)sw',
+      rel: 'la cuñada'
+    },
+    {
+      pattern: '(h|w)(m|f)c',
+      rel: 'el cuñado'
+    },
+    {
+      pattern: '(m|f){2}s',
+      rel: 'el tío'
+    },
+    {
+      pattern: '(m|f){2}d',
+      rel: 'la tía'
+    },
+    {
+      pattern: '(m|f){2}c',
+      rel: 'el tío'
+    },
+    {
+      pattern: '(m|f){2}(d|s|c)d',
+      rel: 'la prima'
+    },
+    {
+      pattern: '(m|f){2}(d|s|c)s',
+      rel: 'el primo'
+    },
+    {
+      pattern: '(m|f){2}(d|s|c)c',
+      rel: 'el primo'
+    },
+    {
+      pattern: '(m|f){3}s',
+      rel: 'el tío segundo'
+    },
+    {
+      pattern: '(m|f){3}d',
+      rel: 'la tía segunda'
+    },
+    {
+      pattern: 'dh',
+      rel: 'el yerno'
+    },
+    {
+      pattern: 'sw',
+      rel: 'la nuera'
+    },
+    {
+      pattern: '(m|f)(d|s|c)d',
+      rel: 'la sobrina'
+    },
+    {
+      pattern: '(m|f)(d|s|c)s',
+      rel: 'el sobrino'
+    }
+  ]
+};
+},{}],3:[function(require,module,exports){
 var utils = require('./utils'),
     each = utils.each;
 
@@ -627,7 +827,7 @@ module.exports = function(person) {
     }
   });
 };
-},{"./utils":7}],3:[function(require,module,exports){
+},{"./utils":8}],4:[function(require,module,exports){
 var filters = module.exports = {};
 
 /**
@@ -784,7 +984,7 @@ function isCousin(relationshipData, includeSpouses){
   // short circuit as soon as we know someone is invalid
   return true;
 };
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 var orders = require('./orders'),
     filters = require('./filters'),
     switchString = require('./switchString'),
@@ -1260,6 +1460,7 @@ FSTraversal.lang = function(config){
 };
 
 FSTraversal.lang(require('../lang/en.js'));
+FSTraversal.lang(require('../lang/es.js'));
 
 /**
  * Helper function to fire all callbacks of a given category
@@ -1289,7 +1490,7 @@ FSTraversal.prototype._call = function(category, params){
     });
   });
 };
-},{"../lang/en.js":1,"./_processPerson":2,"./filters":3,"./orders":5,"./switchString":6,"./utils":7,"async":8}],5:[function(require,module,exports){
+},{"../lang/en.js":1,"../lang/es.js":2,"./_processPerson":3,"./filters":4,"./orders":6,"./switchString":7,"./utils":8,"async":9}],6:[function(require,module,exports){
 var utils = require('./utils');
 
 var orders = module.exports = {};
@@ -1390,7 +1591,7 @@ function _isParentRel(rel){
 function _isChildRel(rel){
   return rel === 'child';
 };
-},{"./utils":7}],6:[function(require,module,exports){
+},{"./utils":8}],7:[function(require,module,exports){
 /**
  * Generate a coded string representing the relationship path
  */
@@ -1435,7 +1636,7 @@ module.exports = function(path){
   }
   return switchStr;
 };
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var utils = module.exports;
 
 /**
@@ -1489,7 +1690,7 @@ utils.isFunction = function(obj){
 utils.isArray = function(obj){
   return Array.isArray ? Array.isArray(obj) : Object.prototype.toString.call(obj) === '[object Array]';
 };
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (process,global){
 /*!
  * async
@@ -2680,7 +2881,7 @@ utils.isArray = function(obj){
 }());
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":9}],9:[function(require,module,exports){
+},{"_process":10}],10:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2740,5 +2941,5 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[4])(4)
+},{}]},{},[5])(5)
 });

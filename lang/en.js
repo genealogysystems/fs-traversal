@@ -99,7 +99,7 @@ module.exports = {
       rel: 'great-granddaughter'
     },
     {
-      pattern: '(s|d|c){2}d',
+      pattern: '(s|d|c){2}c',
       rel: 'great-grandchild'
     },
     // nth great grandchild
