@@ -1,6 +1,6 @@
 {
   "name": "fs-traversal",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "A JavaScript traversal framework for the FamilySearch Family Tree using the visitor pattern",
   "main": "fs-traversal.js",
   "repository": {
@@ -15,7 +15,7 @@
   "homepage": "https://github.com/genealogysystems/fs-traversal",
   "scripts": {
     "test": "mocha",
-    "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js && uglifyjs fs-traversal.js -o fs-traversal.min.js --source-map fs-traversal.min.js.map --source-map-root http://genealogysystems.github.io/fs-traversal/",
+    "build": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js && uglifyjs fs-traversal.js -o fs-traversal.min.js",
     "browserify": "browserify lib/fs-traversal.js -s FSTraversal -o fs-traversal.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
@@ -27,10 +27,10 @@
     "browserify": "9.0.6",
     "chai": "2.2.0",
     "coveralls": "2.11.2",
+    "es6-promise": "^3.0.2",
     "istanbul": "0.3.13",
     "lodash": "3.6.0",
     "mocha": "2.2.1",
-    "q": "1.2.0",
     "uglify-js": "2.4.19"
   }
 }

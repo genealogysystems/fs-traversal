@@ -7,14 +7,14 @@ module.exports = testRel;
 
 function testRel(lang, rel, path){
   expect(relFromPath(lang, path)).to.equal(rel);
-};
+}
 
 /**
  * Returns a relationship string from a path
  */
 function relFromPath(lang, path){
   return FSTraversal(sdk)._relationshipTo(genPath(path), lang);
-};
+}
 
 /**
  * Generate relationship paths in the syntax fs-traversal expects.
@@ -53,7 +53,7 @@ function genPath(origPath){
     });
   }
   return fullPath;
-};
+}
 
 /**
  * Generate a basic person object. _relationshipTo will examine
@@ -65,5 +65,5 @@ function genPerson(gender){
     gender: {
       type: 'http://gedcomx.org/' + gender
     }
-  }
-};
+  };
+}

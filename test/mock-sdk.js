@@ -1,5 +1,5 @@
 var expect = require('chai').expect,
-    graph = require('./graphs/simple.js')
+    graph = require('./graphs/simple.js'),
     sdk = require('./lib/mock-sdk.js')(graph);
     
 describe('Mock SDK', function(){
@@ -14,14 +14,14 @@ describe('Mock SDK', function(){
       expect(response.getSpouseIds()).to.deep.equal(['2']);
       var spouses = response.getSpouseRelationships();
       expect(spouses).to.have.length(1);
-      expect(spouses[0].$getHusbandId()).to.equal('1');
-      expect(spouses[0].$getWifeId()).to.equal('2');
+      expect(spouses[0].getHusbandId()).to.equal('1');
+      expect(spouses[0].getWifeId()).to.equal('2');
       var children = response.getChildRelationships();
       expect(children).to.have.length(1);
       var parents = response.getParentRelationships();
       expect(parents).to.have.length(1);
       done();
-    }).fail(function(e){
+    }).catch(function(e){
       console.log(e);
     });
   });
@@ -36,17 +36,17 @@ describe('Mock SDK', function(){
       expect(response.getSpouseIds()).to.deep.equal(['1']);
       var spouses = response.getSpouseRelationships();
       expect(spouses).to.have.length(1);
-      expect(spouses[0].$getHusbandId()).to.equal('1');
-      expect(spouses[0].$getWifeId()).to.equal('2');
+      expect(spouses[0].getHusbandId()).to.equal('1');
+      expect(spouses[0].getWifeId()).to.equal('2');
       var children = response.getChildRelationships();
       expect(children).to.have.length(1);
-      expect(children[0].$getChildId()).to.equal('5');
-      expect(children[0].$getFatherId()).to.equal('1');
-      expect(children[0].$getMotherId()).to.equal('2');
+      expect(children[0].getChildId()).to.equal('5');
+      expect(children[0].getFatherId()).to.equal('1');
+      expect(children[0].getMotherId()).to.equal('2');
       var parents = response.getParentRelationships();
       expect(parents).to.have.length(0);
       done();
-    }).fail(function(e){
+    }).catch(function(e){
       console.log(e);
     });
   });
@@ -61,17 +61,17 @@ describe('Mock SDK', function(){
       expect(response.getSpouseIds()).to.deep.equal(['4']);
       var spouses = response.getSpouseRelationships();
       expect(spouses).to.have.length(1);
-      expect(spouses[0].$getHusbandId()).to.equal('3');
-      expect(spouses[0].$getWifeId()).to.equal('4');
+      expect(spouses[0].getHusbandId()).to.equal('3');
+      expect(spouses[0].getWifeId()).to.equal('4');
       var children = response.getChildRelationships();
       expect(children).to.have.length(1);
-      expect(children[0].$getChildId()).to.equal('1');
-      expect(children[0].$getFatherId()).to.equal('3');
-      expect(children[0].$getMotherId()).to.equal('4');
+      expect(children[0].getChildId()).to.equal('1');
+      expect(children[0].getFatherId()).to.equal('3');
+      expect(children[0].getMotherId()).to.equal('4');
       var parents = response.getParentRelationships();
       expect(parents).to.have.length(0);
       done();
-    }).fail(function(e){
+    }).catch(function(e){
       console.log(e);
     });
   });
@@ -86,17 +86,17 @@ describe('Mock SDK', function(){
       expect(response.getSpouseIds()).to.deep.equal(['3']);
       var spouses = response.getSpouseRelationships();
       expect(spouses).to.have.length(1);
-      expect(spouses[0].$getHusbandId()).to.equal('3');
-      expect(spouses[0].$getWifeId()).to.equal('4');
+      expect(spouses[0].getHusbandId()).to.equal('3');
+      expect(spouses[0].getWifeId()).to.equal('4');
       var children = response.getChildRelationships();
       expect(children).to.have.length(1);
-      expect(children[0].$getChildId()).to.equal('1');
-      expect(children[0].$getFatherId()).to.equal('3');
-      expect(children[0].$getMotherId()).to.equal('4');
+      expect(children[0].getChildId()).to.equal('1');
+      expect(children[0].getFatherId()).to.equal('3');
+      expect(children[0].getMotherId()).to.equal('4');
       var parents = response.getParentRelationships();
       expect(parents).to.have.length(0);
       done();
-    }).fail(function(e){
+    }).catch(function(e){
       console.log(e);
     });
   });
@@ -116,7 +116,7 @@ describe('Mock SDK', function(){
       var parents = response.getParentRelationships();
       expect(parents).to.have.length(1);
       done();
-    }).fail(function(e){
+    }).catch(function(e){
       console.log(e);
     });
   });

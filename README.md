@@ -7,6 +7,13 @@ Given a starting person, it traverses through the tree (graph) using the visitor
 
 Requires the [FamilySearch Javascript SDK](https://github.com/rootsdev/familysearch-javascript-sdk).
 
+## Compatibility
+
+|fs-traversal|FamilySearch JavaScript SDK|
+|-------|------|
+|v4|v2|
+|v3 and earlier|v1|
+
 # Usage
 
 ```js
