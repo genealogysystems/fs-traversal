@@ -57,7 +57,7 @@
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
-    <script src="//rootsdev.org/familysearch-javascript-sdk/familysearch-javascript-sdk.js"></script>
+    <script src="//cdn.jsdelivr.net/familysearch-javascript-sdk/2.0.4/familysearch-javascript-sdk.min.js"></script>
     <script src="fs-traversal.min.js"></script>
     <script>
       var fsClient;
@@ -77,8 +77,6 @@
           fsClient = new FamilySearch({
             app_key: 'fs-traversal-demo',
             environment: 'production',
-            http_function: $.ajax,
-            deferred_function: $.Deferred,
             access_token: token,
             redirect_uri: '/'
           });
