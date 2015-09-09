@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/genealogysystems/fs-traversal.svg?branch=master)](https://travis-ci.org/genealogysystems/fs-traversal)
 [![Coverage Status](https://coveralls.io/repos/genealogysystems/fs-traversal/badge.svg?branch=master)](https://coveralls.io/r/genealogysystems/fs-traversal?branch=master)
-[![Dependency Status](https://david-dm.org/genealogysystems/fs-traversal.svg)](https://david-dm.org/genealogysystems/fs-traversal)
-[![devDependency Status](https://david-dm.org/genealogysystems/fs-traversal/dev-status.svg)](https://david-dm.org/genealogysystems/fs-traversal#info=devDependencies)
 
 # fs-traversal
 
@@ -12,9 +10,9 @@ Requires the [FamilySearch Javascript SDK](https://github.com/rootsdev/familysea
 # Usage
 
 ```js
-FamilySearch.init({access_token: '12345'});
+var client = new FamilySearch({configOptions});
 
-var traversal = FSTraversal(FamilySearch);
+var traversal = FSTraversal(client);
 
 traversal
   .limit(10)
