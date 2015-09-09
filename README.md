@@ -26,7 +26,7 @@ traversal
   .order('distance')
   .concurrency(2)
   .person(function(person) {
-    console.log('visited '+person.$getDisplayName());
+    console.log('visited '+person.getDisplayName());
   })
   .done(function() {
     console.log('done!');
@@ -99,7 +99,7 @@ Specify a function to be called for each person visited in the traversal. You ma
 
 ```js
 traversal.person(function(person){
-  console.log('visited '+person.$getDisplayName());
+  console.log('visited '+person.getDisplayName());
 })
 ```
 
@@ -114,7 +114,7 @@ Specify a function to be called for each child-parent pair visited in the traver
 
 ```js
 traversal.parent(function(parent, child){
-  console.log(child.$getDisplayName()+' is the child of '+parent.$getDisplayName());
+  console.log(child.getDisplayName()+' is the child of '+parent.getDisplayName());
 })
 ```
 
@@ -129,7 +129,7 @@ Specify a function to be called for a person and all of their parents. You may c
 
 ```js
 traversal.parents(function(person, parents){
-  console.log('person:'+person.$getDisplayName());
+  console.log('person:'+person.getDisplayName());
 })
 ```
 
@@ -144,9 +144,9 @@ Specify a function to be called for each child-parent-parent ternary relationshi
 
 ```js
 traversal.child(function(child, mother, father, childRelationship){
-  console.log('child:'+child.$getDisplayName());
-  console.log('mother:'+mother.$getDisplayName());
-  console.log('father:'+father.$getDisplayName());
+  console.log('child:'+child.getDisplayName());
+  console.log('mother:'+mother.getDisplayName());
+  console.log('father:'+father.getDisplayName());
 })
 ```
 
@@ -163,7 +163,7 @@ Specify a function to be called for a person and all of their children. You may 
 
 ```js
 traversal.children(function(person, children){
-  console.log('person:'+person.$getDisplayName());
+  console.log('person:'+person.getDisplayName());
 })
 ```
 
@@ -178,7 +178,7 @@ Specify a function to be called for each marriage relationship visited in the tr
 
 ```js
 traversal.marriage(function(wife, husband, marriage){
-  console.log(wife.$getDisplayName()+' married '+husband.$getDisplayName());
+  console.log(wife.getDisplayName()+' married '+husband.getDisplayName());
 })
 ```
 
@@ -194,7 +194,7 @@ Specify a function to be called for a person and all of their spouses. You may c
 
 ```js
 traversal.spouses(function(person, spouses){
-  console.log('person:'+person.$getDisplayName());
+  console.log('person:'+person.getDisplayName());
 })
 ```
 
@@ -228,7 +228,7 @@ Specify a function to be called for a person and all of their relationships. You
 
 ```js
 traversal.relationships(function(person, relationships, people){
-  console.log('person:'+person.$getDisplayName());
+  console.log('person:'+person.getDisplayName());
 })
 ```
 
