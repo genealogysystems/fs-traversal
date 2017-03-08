@@ -1300,7 +1300,7 @@ FSTraversal.prototype._traverse = function(startId) {
    */
   
   self._queue = async.priorityQueue(function(personId, callback){
-    self._sdk.getPersonWithRelationships(personId).then(function(response) {
+    self._sdk.getPerson(personId).then(function(response) {
       self._processPerson(response);
       // Callback is after _processPerson so that the queue.drain function
       // will get called at the proper time.

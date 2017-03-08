@@ -11,7 +11,8 @@ Requires the [FamilySearch Javascript SDK](https://github.com/rootsdev/familysea
 
 |fs-traversal|FamilySearch JavaScript SDK|
 |-------|------|
-|v4|v2|
+|v4.1.0|v2.8.0 and later|
+|v4.0.0|v2.0.0 - v2.7.0|
 |v3 and earlier|v1|
 
 # Usage
