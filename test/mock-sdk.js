@@ -5,7 +5,7 @@ var expect = require('chai').expect,
 describe('Mock SDK', function(){
 
   it('base person', function(done){
-    sdk.getPersonWithRelationships('1').then(function(response){
+    sdk.getPerson('1').then(function(response){
       expect(response.getPrimaryId()).to.equal('1');
       expect(response.getPrimaryPerson().id).to.equal('1');
       expect(response.getChildIds()).to.deep.equal(['5']);
@@ -27,7 +27,7 @@ describe('Mock SDK', function(){
   });
   
   it('spouse', function(done){
-    sdk.getPersonWithRelationships('2').then(function(response){
+    sdk.getPerson('2').then(function(response){
       expect(response.getPrimaryId()).to.equal('2');
       expect(response.getPrimaryPerson().id).to.equal('2');
       expect(response.getChildIds()).to.deep.equal(['5']);
@@ -52,7 +52,7 @@ describe('Mock SDK', function(){
   });
   
   it('father', function(done){
-    sdk.getPersonWithRelationships('3').then(function(response){
+    sdk.getPerson('3').then(function(response){
       expect(response.getPrimaryId()).to.equal('3');
       expect(response.getPrimaryPerson().id).to.equal('3');
       expect(response.getChildIds()).to.deep.equal(['1']);
@@ -77,7 +77,7 @@ describe('Mock SDK', function(){
   });
   
   it('mother', function(done){
-    sdk.getPersonWithRelationships('4').then(function(response){
+    sdk.getPerson('4').then(function(response){
       expect(response.getPrimaryId()).to.equal('4');
       expect(response.getPrimaryPerson().id).to.equal('4');
       expect(response.getChildIds()).to.deep.equal(['1']);
@@ -102,7 +102,7 @@ describe('Mock SDK', function(){
   });
   
   it('child', function(done){
-    sdk.getPersonWithRelationships('5').then(function(response){
+    sdk.getPerson('5').then(function(response){
       expect(response.getPrimaryId()).to.equal('5');
       expect(response.getPrimaryPerson().id).to.equal('5');
       expect(response.getChildIds()).to.deep.equal([]);

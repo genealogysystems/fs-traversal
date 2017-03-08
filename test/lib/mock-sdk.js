@@ -30,7 +30,7 @@ module.exports = function(graph) {
     // the helper functions documented at 
     // http://rootsdev.org/familysearch-javascript-sdk/#/api/person.functions:getPersonWithRelationships
     // which are used by fs-traversal
-    getPersonWithRelationships: function(personId){
+    getPerson: function(personId){
       return new Promise(function(resolve, reject){
         
         // Simulate an error
