@@ -15,6 +15,14 @@ Requires the [FamilySearch Javascript SDK](https://github.com/rootsdev/familysea
 |v4.0.0|v2.0.0 - v2.7.0|
 |v3 and earlier|v1|
 
+# Install
+
+May be included from the [CDN jsDelivr](http://www.jsdelivr.com/projects/fs-traversal).
+
+```html
+<script src="https://cdn.jsdelivr.net/fs-traversal/4.0.0/fs-traversal.min.js"></script>
+```
+
 # Usage
 
 ```js
